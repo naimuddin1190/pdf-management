@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF Studio — Merge, Split &amp; Edit PDFs</title>
+<meta name="description" content="Merge, split, compress, convert, sign and edit PDFs right in your browser. Free, private, no uploads.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="theme-color" content="#8b5cf6">
 <script>
   /* Apply saved theme / language before first paint (no flash) */
   (function () {
@@ -23,7 +29,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Hind+Siliguri:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&family=Hind+Siliguri:wght@500;700&family=Dancing+Script:wght@600&family=Great+Vibes&family=Caveat:wght@600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -228,6 +234,51 @@
   .dark .hover\:\!border-rose-200:hover { border-color: rgba(244,63,94,.45) !important; }
   .dark .group:hover .group-hover\:bg-violet-500 { background-color: #8b5cf6; }
   .dark .group:hover .group-hover\:text-white { color: #fff; }
+
+  /* ---------- Category chips, badges, kbd ---------- */
+  .no-scrollbar { scrollbar-width: none; } .no-scrollbar::-webkit-scrollbar { display: none; }
+  .chip { flex-shrink: 0; padding: .5rem 1rem; border-radius: 999px; font-size: .82rem; font-weight: 600; color: #57536e; background: rgba(255,255,255,.7);
+    border: 1px solid #e6e3f1; transition: all .2s; white-space: nowrap; }
+  .chip:hover { color: #6d28d9; border-color: #d8ccfb; }
+  .chip.on { color: #fff; border-color: transparent; background: linear-gradient(135deg, #7c3aed, #c026d3); box-shadow: 0 6px 16px -6px rgba(192,38,211,.6); }
+  .dark .chip { color: #bcb8d2; background: rgba(29,26,44,.75); border-color: #332e48; }
+  .dark .chip:hover { color: #c4b5fd; border-color: #5b4a9a; }
+  .dark .chip.on { color: #fff; border-color: transparent; background: linear-gradient(135deg, #7c3aed, #c026d3); }
+  .new-badge { font-family: Inter, 'Hind Siliguri', sans-serif; font-size: .62rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: .2rem .5rem; border-radius: 999px;
+    color: #fff; background: linear-gradient(135deg, #f43f5e, #f97316); box-shadow: 0 4px 10px -4px rgba(244,63,94,.6); }
+  .kbd { font: 600 .7rem/1 Inter, sans-serif; padding: .3rem .45rem; border-radius: 6px; color: #6b6785; background: #f1eff8; border: 1px solid #e2def0; box-shadow: inset 0 -1px 0 #e2def0; }
+  .dark .kbd { color: #9c97b5; background: #1d1a2c; border-color: #332e48; box-shadow: inset 0 -1px 0 #332e48; }
+  .recent-link { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .75rem; border-radius: 999px; font-weight: 600; color: #57536e;
+    background: rgba(255,255,255,.6); border: 1px solid #ebe9f5; transition: all .2s; }
+  .recent-link:hover { color: #6d28d9; border-color: #d8ccfb; }
+  .dark .recent-link { color: #bcb8d2; background: rgba(29,26,44,.6); border-color: #2c2840; }
+  .dark .recent-link:hover { color: #c4b5fd; border-color: #5b4a9a; }
+
+  /* ---------- Mobile menu ---------- */
+  .menu-link { display: flex; align-items: center; gap: .6rem; padding: .55rem .6rem; border-radius: 14px; font-size: .85rem; font-weight: 600; color: #3f3b57; transition: background .2s; min-width: 0; }
+  .menu-link:hover, .menu-link.on { background: rgba(124,58,237,.08); color: #6d28d9; }
+  .dark .menu-link { color: #d4d1e6; }
+  .dark .menu-link:hover, .dark .menu-link.on { background: rgba(167,139,250,.12); color: #c4b5fd; }
+
+  /* ---------- Signature ---------- */
+  .sig-pad { background: #fff linear-gradient(transparent calc(78% - 1px), #e2def0 calc(78% - 1px), #e2def0 78%, transparent 78%) no-repeat; border: 1.5px dashed #d9d4ee; cursor: crosshair; }
+  .dark .sig-pad { border-color: #4a4462; }
+  .ink-dot { display: block; width: 30px; height: 30px; border-radius: 999px; box-shadow: 0 0 0 2px #fff, 0 0 0 3px #d9d4ee; transition: box-shadow .2s, transform .2s; }
+  input:checked + .ink-dot { box-shadow: 0 0 0 2px #fff, 0 0 0 4.5px #8b5cf6; transform: scale(1.05); }
+  input:focus-visible + .ink-dot { outline: 2px solid #a78bfa; outline-offset: 4px; }
+  .dark .ink-dot { box-shadow: 0 0 0 2px #1d1a2c, 0 0 0 3px #4a4462; }
+  .dark input:checked + .ink-dot { box-shadow: 0 0 0 2px #1d1a2c, 0 0 0 4.5px #a78bfa; }
+
+  /* ---------- Touch-friendly drag ---------- */
+  .item-card { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+  .item-card.dragging { position: relative; z-index: 40; opacity: .96; pointer-events: none; transition: none !important;
+    box-shadow: 0 28px 50px -14px rgba(76,29,149,.5); border-color: #a78bfa; }
+
+  /* ---------- Small screens ---------- */
+  @media (max-width: 639px) {
+    .res-actions > * { flex: 1 1 100%; }
+    .btn-primary, .btn-wa { padding: .8rem 1.1rem; }
+  }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
@@ -237,22 +288,24 @@
 
   <header class="sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-3 sm:px-6 pt-3 sm:pt-4">
-      <nav class="glass rounded-full pl-3 pr-3 sm:pl-4 h-14 flex items-center justify-between">
-        <a href="#" class="flex items-center gap-2.5 font-display font-bold text-lg tracking-tight text-slate-900">
+      <nav class="glass rounded-full pl-2.5 pr-2 sm:pl-4 sm:pr-3 h-14 flex items-center justify-between gap-2">
+        <a href="#" class="flex items-center gap-2 sm:gap-2.5 font-display font-bold text-base sm:text-lg tracking-tight text-slate-900 shrink-0">
           <span class="icon-bubble w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 via-fuchsia-500 to-rose-500 grid place-items-center" style="--glow:rgba(217,70,239,.5)">
             <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
           </span>
           <span>PDF<span class="text-gradient">Studio</span></span>
         </a>
         <div id="navLinks" class="hidden md:flex items-center gap-1 text-sm font-medium"></div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1.5 sm:gap-2">
           <span class="hidden lg:inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#34d399]"></span> <span data-i18n="Free · Private">Free · Private</span>
           </span>
           <button id="langBtn" type="button" class="nav-btn">বাংলা</button>
           <button id="themeBtn" type="button" class="nav-btn icon-only"></button>
+          <button id="menuBtn" type="button" class="nav-btn icon-only md:hidden" aria-expanded="false" aria-controls="mobileMenu"></button>
         </div>
       </nav>
+      <div id="mobileMenu" class="hidden md:hidden glass rounded-3xl mt-2 p-2.5 max-h-[72vh] overflow-y-auto fade-in"></div>
     </div>
   </header>
 

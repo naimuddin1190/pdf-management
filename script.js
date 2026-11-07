@@ -182,6 +182,13 @@ const ICONS = {
   external: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
   moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+  pen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  crop: '<path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/>',
+  resize: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>',
+  nup: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 3v18M3 12h18"/>',
+  panels: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h18M3 16h18"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
 };
 const WA_SVG = (cls = 'w-5 h-5') => `<svg class="${cls}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.04 21.5h-.01a9.45 9.45 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.23-.36a9.43 9.43 0 0 1-1.45-5.03c0-5.22 4.25-9.47 9.48-9.47 2.53 0 4.91.99 6.7 2.78a9.41 9.41 0 0 1 2.77 6.7c0 5.22-4.25 9.47-9.47 9.47zm8.06-17.53A11.33 11.33 0 0 0 12.04.63C5.76.63.65 5.74.65 12.02c0 2.01.52 3.97 1.52 5.69L.55 23.6l6.04-1.58a11.36 11.36 0 0 0 5.44 1.39h.01c6.28 0 11.39-5.11 11.39-11.39 0-3.04-1.18-5.9-3.33-8.05z"/></svg>`;
 const icon = (k, cls = 'w-5 h-5') => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>`;
@@ -189,18 +196,59 @@ const icon = (k, cls = 'w-5 h-5') => `<svg class="${cls}" viewBox="0 0 24 24" fi
 /* ================= Tools catalogue ================= */
 const PDF = 'application/pdf,.pdf';
 const TOOLS = [
-  { id: 'merge', title: 'Merge PDF', desc: 'Combine multiple PDFs into a single file in the order you want.', icon: 'merge', grad: 'from-violet-500 to-fuchsia-500', glow: 'rgba(168,85,247,.6)', accept: PDF, multiple: true, kind: 'list', action: 'Merge PDFs', min: 2 },
-  { id: 'split', title: 'Split PDF', desc: 'Extract pages, split by ranges or break every page into its own file.', icon: 'split', grad: 'from-pink-500 to-rose-500', glow: 'rgba(244,63,94,.55)', accept: PDF, kind: 'pages', action: 'Split PDF' },
-  { id: 'organize', title: 'Organize Pages', desc: 'Drag to reorder, rotate or delete individual pages visually.', icon: 'grid', grad: 'from-amber-400 to-orange-500', glow: 'rgba(249,115,22,.55)', accept: PDF, kind: 'pages', action: 'Save changes' },
-  { id: 'compress', title: 'Compress PDF', desc: 'Shrink file size by optimizing pages — great for email & uploads.', icon: 'compress', grad: 'from-emerald-400 to-teal-500', glow: 'rgba(16,185,129,.55)', accept: PDF, kind: 'single', action: 'Compress PDF' },
-  { id: 'rotate', title: 'Rotate PDF', desc: 'Rotate all pages, odd/even pages or a custom set of pages.', icon: 'rotate', grad: 'from-sky-400 to-blue-600', glow: 'rgba(59,130,246,.55)', accept: PDF, kind: 'single', action: 'Rotate PDF' },
-  { id: 'img-to-pdf', title: 'Image to PDF', desc: 'Turn JPG, PNG, WEBP and more into a clean, single PDF.', icon: 'image', grad: 'from-cyan-400 to-indigo-500', glow: 'rgba(99,102,241,.55)', accept: 'image/*', multiple: true, kind: 'list', action: 'Create PDF', isImage: true },
-  { id: 'pdf-to-img', title: 'PDF to Image', desc: 'Convert each page into a high-quality PNG or JPG image.', icon: 'fileImage', grad: 'from-fuchsia-500 to-purple-600', glow: 'rgba(192,38,211,.55)', accept: PDF, kind: 'single', action: 'Convert to images' },
-  { id: 'watermark', title: 'Add Watermark', desc: 'Stamp text over your pages — centered or tiled, any language.', icon: 'drop', grad: 'from-blue-500 to-violet-600', glow: 'rgba(124,58,237,.55)', accept: PDF, kind: 'single', action: 'Add watermark' },
-  { id: 'page-numbers', title: 'Page Numbers', desc: 'Add page numbers with custom position, style and format.', icon: 'hash', grad: 'from-lime-400 to-emerald-500', glow: 'rgba(132,204,22,.5)', accept: PDF, kind: 'single', action: 'Add page numbers' },
-  { id: 'extract-text', title: 'Extract Text', desc: 'Pull all selectable text out of a PDF into a .txt file.', icon: 'text', grad: 'from-orange-400 to-pink-500', glow: 'rgba(236,72,153,.5)', accept: PDF, kind: 'single', action: 'Extract text' },
-  { id: 'metadata', title: 'Edit Metadata', desc: 'Change title, author, subject and keywords of a PDF.', icon: 'info', grad: 'from-slate-400 to-slate-600', glow: 'rgba(148,163,184,.45)', accept: PDF, kind: 'single', action: 'Save metadata' },
+  { id: 'merge', cat: 'organize', title: 'Merge PDF', desc: 'Combine multiple PDFs into a single file in the order you want.', icon: 'merge', grad: 'from-violet-500 to-fuchsia-500', glow: 'rgba(168,85,247,.6)', accept: PDF, multiple: true, kind: 'list', action: 'Merge PDFs', min: 2 },
+  { id: 'split', cat: 'organize', title: 'Split PDF', desc: 'Extract pages, split by ranges or break every page into its own file.', icon: 'split', grad: 'from-pink-500 to-rose-500', glow: 'rgba(244,63,94,.55)', accept: PDF, kind: 'pages', action: 'Split PDF' },
+  { id: 'organize', cat: 'organize', title: 'Organize Pages', desc: 'Drag to reorder, rotate or delete individual pages visually.', icon: 'grid', grad: 'from-amber-400 to-orange-500', glow: 'rgba(249,115,22,.55)', accept: PDF, kind: 'pages', action: 'Save changes' },
+  { id: 'sign', cat: 'edit', isNew: true, title: 'Sign PDF', desc: 'Draw, type or upload your signature and place it anywhere on the page.', icon: 'pen', grad: 'from-indigo-500 to-sky-500', glow: 'rgba(79,70,229,.55)', accept: PDF, kind: 'single', action: 'Sign & save', bigPreview: true },
+  { id: 'compress', cat: 'optimize', title: 'Compress PDF', desc: 'Shrink file size by optimizing pages — great for email & uploads.', icon: 'compress', grad: 'from-emerald-400 to-teal-500', glow: 'rgba(16,185,129,.55)', accept: PDF, kind: 'single', action: 'Compress PDF' },
+  { id: 'rotate', cat: 'organize', title: 'Rotate PDF', desc: 'Rotate all pages, odd/even pages or a custom set of pages.', icon: 'rotate', grad: 'from-sky-400 to-blue-600', glow: 'rgba(59,130,246,.55)', accept: PDF, kind: 'single', action: 'Rotate PDF' },
+  { id: 'img-to-pdf', cat: 'convert', title: 'Image to PDF', desc: 'Turn JPG, PNG, WEBP and more into a clean, single PDF.', icon: 'image', grad: 'from-cyan-400 to-indigo-500', glow: 'rgba(99,102,241,.55)', accept: 'image/*', multiple: true, kind: 'list', action: 'Create PDF', isImage: true },
+  { id: 'pdf-to-img', cat: 'convert', title: 'PDF to Image', desc: 'Convert each page into a high-quality PNG or JPG image.', icon: 'fileImage', grad: 'from-fuchsia-500 to-purple-600', glow: 'rgba(192,38,211,.55)', accept: PDF, kind: 'single', action: 'Convert to images' },
+  { id: 'crop', cat: 'edit', isNew: true, title: 'Crop PDF', desc: 'Trim margins from pages with a live preview.', icon: 'crop', grad: 'from-rose-400 to-amber-400', glow: 'rgba(251,113,133,.55)', accept: PDF, kind: 'single', action: 'Crop pages', bigPreview: true },
+  { id: 'resize', cat: 'optimize', isNew: true, title: 'Resize Pages', desc: 'Fit every page onto A4, Letter, A3 and more — no distortion.', icon: 'resize', grad: 'from-teal-400 to-cyan-600', glow: 'rgba(20,184,166,.55)', accept: PDF, kind: 'single', action: 'Resize PDF' },
+  { id: 'n-up', cat: 'organize', isNew: true, title: 'Pages per Sheet', desc: 'Print 2, 4, 6 or 9 pages on a single sheet to save paper.', icon: 'nup', grad: 'from-purple-500 to-pink-500', glow: 'rgba(168,85,247,.55)', accept: PDF, kind: 'single', action: 'Create sheets' },
+  { id: 'watermark', cat: 'edit', title: 'Add Watermark', desc: 'Stamp text over your pages — centered or tiled, any language.', icon: 'drop', grad: 'from-blue-500 to-violet-600', glow: 'rgba(124,58,237,.55)', accept: PDF, kind: 'single', action: 'Add watermark' },
+  { id: 'page-numbers', cat: 'edit', title: 'Page Numbers', desc: 'Add page numbers with custom position, style and format.', icon: 'hash', grad: 'from-lime-400 to-emerald-500', glow: 'rgba(132,204,22,.5)', accept: PDF, kind: 'single', action: 'Add page numbers' },
+  { id: 'header-footer', cat: 'edit', isNew: true, title: 'Header & Footer', desc: 'Add header and footer text with page numbers, date and file name.', icon: 'panels', grad: 'from-yellow-400 to-orange-500', glow: 'rgba(245,158,11,.55)', accept: PDF, kind: 'single', action: 'Add header & footer' },
+  { id: 'extract-text', cat: 'convert', title: 'Extract Text', desc: 'Pull all selectable text out of a PDF into a .txt file.', icon: 'text', grad: 'from-orange-400 to-pink-500', glow: 'rgba(236,72,153,.5)', accept: PDF, kind: 'single', action: 'Extract text' },
+  { id: 'metadata', cat: 'edit', title: 'Edit Metadata', desc: 'Change title, author, subject and keywords of a PDF.', icon: 'info', grad: 'from-slate-400 to-slate-600', glow: 'rgba(148,163,184,.45)', accept: PDF, kind: 'single', action: 'Save metadata' },
 ];
+const CATS = [['all', 'All'], ['organize', 'Organize'], ['edit', 'Edit'], ['convert', 'Convert'], ['optimize', 'Optimize']];
+const SHEETS = { a4: [595.28, 841.89], letter: [612, 792], legal: [612, 1008], a3: [841.89, 1190.55], a5: [419.53, 595.28] };
+
+Object.assign(BN, {
+  'Organize': 'সাজানো', 'Edit': 'এডিট', 'Convert': 'কনভার্ট', 'Optimize': 'অপ্টিমাইজ', 'New': 'নতুন', 'Recently used': 'সম্প্রতি ব্যবহৃত',
+  'Menu': 'মেনু', 'Shortcut: Ctrl + Enter': 'শর্টকাট: Ctrl + Enter', 'Previous page': 'আগের পেজ', 'Next page': 'পরের পেজ', 'Page {n} of {total}': 'পেজ {n} / {total}',
+  'Tip: drag cards to reorder (press and hold on touch screens), or use the arrows.': 'টিপ: কার্ড টেনে ক্রম বদলান (টাচ স্ক্রিনে চেপে ধরে টানুন), অথবা তীর চিহ্ন ব্যবহার করুন।',
+  'Drag pages to reorder (press and hold on touch screens) · rotate or delete with the buttons.': 'পেজ টেনে ক্রম বদলান (টাচ স্ক্রিনে চেপে ধরে টানুন) · বাটন দিয়ে ঘোরান বা মুছুন।',
+  // sign
+  'Sign PDF': 'PDF-এ সই', 'Draw, type or upload your signature and place it anywhere on the page.': 'সই আঁকুন, টাইপ করুন বা আপলোড করে পেজের যেকোনো জায়গায় বসান।', 'Sign & save': 'সই করে সেভ করুন',
+  'Signature': 'সই', 'Draw': 'আঁকুন', 'Type': 'টাইপ', 'Upload': 'আপলোড', 'Sign with your mouse, finger or stylus': 'মাউস, আঙুল বা স্টাইলাস দিয়ে সই করুন',
+  'Type your name': 'আপনার নাম লিখুন', 'Choose signature image': 'সইয়ের ছবি বেছে নিন', 'PNG or JPG — a photo of your signature works too': 'PNG বা JPG — কাগজে করা সইয়ের ছবি তুলেও দিতে পারেন',
+  'Remove white background': 'সাদা ব্যাকগ্রাউন্ড সরান', 'Ink color': 'কালির রং', 'Signature size': 'সইয়ের সাইজ', 'Place on': 'যেখানে বসবে', 'This page': 'এই পেজ', 'All pages': 'সব পেজ',
+  'Create your signature in the options panel': 'অপশন প্যানেলে আপনার সই তৈরি করুন', 'Create your signature first': 'আগে আপনার সই তৈরি করুন',
+  'Click or drag on the page to place your signature.': 'সই বসাতে পেজে ক্লিক করুন বা টেনে আনুন।',
+  'Signature added to {n} page': '{n}টি পেজে সই যোগ হয়েছে', 'Signature added to {n} pages': '{n}টি পেজে সই যোগ হয়েছে',
+  // crop
+  'Crop PDF': 'PDF ক্রপ', 'Trim margins from pages with a live preview.': 'লাইভ প্রিভিউ দেখে পেজের মার্জিন কেটে ফেলুন।', 'Crop pages': 'পেজ ক্রপ করুন',
+  'Same margin on all sides': 'চারদিকে একই মার্জিন', 'Top': 'উপরে', 'Right': 'ডানে', 'Bottom': 'নিচে', 'Left': 'বাঁয়ে',
+  'Cropping hides the outer area of each page. Use the arrows under the preview to check other pages.': 'ক্রপ করলে প্রতিটি পেজের বাইরের অংশ বাদ যায়। অন্য পেজ দেখতে প্রিভিউয়ের নিচের তীর ব্যবহার করুন।',
+  '{n} page cropped': '{n}টি পেজ ক্রপ হয়েছে', '{n} pages cropped': '{n}টি পেজ ক্রপ হয়েছে',
+  // resize
+  'Resize Pages': 'পেজ রিসাইজ', 'Fit every page onto A4, Letter, A3 and more — no distortion.': 'প্রতিটি পেজ A4, Letter, A3 ইত্যাদি সাইজে বসান — কোনো বিকৃতি ছাড়াই।', 'Resize PDF': 'PDF রিসাইজ করুন',
+  'Every page is scaled to fit the new size without distortion and centred. Links and form fields are flattened.': 'প্রতিটি পেজ বিকৃতি ছাড়াই নতুন সাইজে মানিয়ে মাঝখানে বসানো হয়। লিংক ও ফর্ম ফিল্ড সাধারণ কনটেন্টে পরিণত হয়।',
+  'Resizing page {i} of {n}': '{n}টির মধ্যে {i} নম্বর পেজ রিসাইজ হচ্ছে',
+  // n-up
+  'Pages per Sheet': 'এক শিটে একাধিক পেজ', 'Print 2, 4, 6 or 9 pages on a single sheet to save paper.': 'কাগজ বাঁচাতে এক শিটে 2, 4, 6 বা 9টি পেজ প্রিন্ট করুন।', 'Create sheets': 'শিট তৈরি করুন',
+  'Pages per sheet': 'প্রতি শিটে পেজ', 'Sheet size': 'শিটের সাইজ', 'Spacing': 'ফাঁকা জায়গা', 'Draw a border around each page': 'প্রতিটি পেজের চারপাশে বর্ডার দিন',
+  '{n} sheet': '{n}টি শিট', '{n} sheets': '{n}টি শিট', 'Arranging sheet {i} of {n}': '{n}টির মধ্যে {i} নম্বর শিট সাজানো হচ্ছে',
+  // header & footer
+  'Header & Footer': 'হেডার ও ফুটার', 'Add header and footer text with page numbers, date and file name.': 'পেজ নম্বর, তারিখ ও ফাইলের নামসহ হেডার-ফুটার লেখা যোগ করুন।', 'Add header & footer': 'হেডার-ফুটার যোগ করুন',
+  'Header text': 'হেডারের লেখা', 'Footer text': 'ফুটারের লেখা', 'Leave empty for none': 'না চাইলে খালি রাখুন', 'Alignment': 'সারিবদ্ধতা',
+  'Tokens: {n} page · {total} total pages · {date} today · {file} file name': 'টোকেন: {n} পেজ নম্বর · {total} মোট পেজ · {date} আজকের তারিখ · {file} ফাইলের নাম',
+  'Enter a header or footer text': 'হেডার বা ফুটারের লেখা দিন',
+  'Header & footer added to {n} page': '{n}টি পেজে হেডার-ফুটার যোগ হয়েছে', 'Header & footer added to {n} pages': '{n}টি পেজে হেডার-ফুটার যোগ হয়েছে',
+});
 
 /* ================= UI primitives ================= */
 const field = (label, inner, hint = '') => `<div><label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">${tr(label)}</label>${inner}${hint ? `<p class="text-xs text-slate-400 mt-1.5 leading-relaxed">${tr(hint)}</p>` : ''}</div>`;
@@ -266,7 +314,7 @@ async function renderPage(pdf, n, { width, scale, white = true } = {}) {
 /* ================= State & routing ================= */
 let T = null, S = null;
 const app = $('#app');
-function freshState() { return { files: [], pages: [], selected: new Set(), urls: [], meta: null }; }
+function freshState() { return { files: [], pages: [], selected: new Set(), urls: [], meta: null, view: 1 }; }
 function disposeState() {
   if (!S) return;
   S.files.forEach(f => { try { f.pdf && f.pdf.destroy(); } catch (e) {} f.url && URL.revokeObjectURL(f.url); });
@@ -284,12 +332,43 @@ window.addEventListener('drop', e => { if ([...(e.dataTransfer?.types || [])].in
 
 const NAV = { merge: 'Merge', split: 'Split', compress: 'Compress', 'img-to-pdf': 'Image → PDF', 'pdf-to-img': 'PDF → Image' };
 function renderNav() {
-  $('#navLinks').innerHTML = Object.keys(NAV).map(id => `<a href="#${id}" data-nav="${id}" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 transition">${tr(NAV[id])}</a>`).join('');
+  $('#navLinks').innerHTML = Object.keys(NAV).map(id => `<a href="#${id}" data-nav="${id}" class="px-2.5 lg:px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 transition whitespace-nowrap">${tr(NAV[id])}</a>`).join('');
+  // Phone / small-tablet menu: every tool, grouped by category.
+  $('#mobileMenu').innerHTML = `<a href="#" class="menu-link mb-1">${icon('grid', 'w-4 h-4')} ${tr('All tools')}</a>` + CATS.slice(1).map(([k, l]) => `
+    <div class="px-2 pt-2 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">${tr(l)}</div>
+    <div class="grid grid-cols-2 gap-1">${TOOLS.filter(t => t.cat === k).map(t => `
+      <a href="#${t.id}" data-mnav="${t.id}" class="menu-link"><span class="w-7 h-7 shrink-0 rounded-lg bg-gradient-to-br ${t.grad} grid place-items-center text-white">${icon(t.icon, 'w-3.5 h-3.5')}</span><span class="leading-tight">${tr(t.title)}</span></a>`).join('')}
+    </div>`).join('');
+  const mb = $('#menuBtn'); mb.title = tr('Menu'); mb.setAttribute('aria-label', mb.title);
   markNav();
 }
 function markNav() {
   $$('[data-nav]').forEach(a => { const on = !!T && a.dataset.nav === T.id; a.classList.toggle('bg-slate-900/5', on); a.classList.toggle('text-slate-900', on); });
+  $$('[data-mnav]').forEach(a => a.classList.toggle('on', !!T && a.dataset.mnav === T.id));
 }
+function setMenu(open) {
+  $('#mobileMenu').classList.toggle('hidden', !open);
+  $('#menuBtn').setAttribute('aria-expanded', String(open));
+  $('#menuBtn').innerHTML = icon(open ? 'x' : 'menu', 'w-4 h-4');
+}
+setMenu(false);
+$('#menuBtn').addEventListener('click', e => { e.stopPropagation(); setMenu($('#mobileMenu').classList.contains('hidden')); });
+$('#mobileMenu').addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+document.addEventListener('click', e => { if (!e.target.closest('#mobileMenu') && !e.target.closest('#menuBtn')) setMenu(false); });
+window.addEventListener('resize', () => { if (window.innerWidth >= 768) setMenu(false); });
+
+/* ---------- Keyboard shortcuts ---------- */
+document.addEventListener('keydown', e => {
+  const a = document.activeElement, typing = a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable);
+  if (e.key === 'Escape') setMenu(false);
+  if (e.key === '/' && !typing && !T) { const s = $('#search'); if (s) { e.preventDefault(); s.focus(); } }
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && T) { const b = $('#runBtn'); if (b && !b.disabled && $('#busy').classList.contains('hidden')) { e.preventDefault(); run(); } }
+});
+
+/* ---------- Recently used tools ---------- */
+const getRecent = () => { try { return (JSON.parse(LS.get('pdfstudio-recent')) || []).filter(id => TOOLS.some(t => t.id === id)); } catch (e) { return []; } };
+const pushRecent = id => LS.set('pdfstudio-recent', JSON.stringify([id, ...getRecent().filter(x => x !== id)].slice(0, 4)));
+let homeCat = 'all';
 
 /* ---------- Day / night mode ---------- */
 const isDark = () => document.documentElement.classList.contains('dark');
@@ -345,11 +424,20 @@ function renderHome() {
     </p>
     <div class="fade-in mt-8 max-w-md mx-auto relative" style="animation-delay:180ms">
       <span class="absolute z-10 left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">${icon('search', 'w-4 h-4')}</span>
-      <input id="search" class="inp !rounded-2xl !py-3.5 !pl-11 glass" placeholder="${tr('Search tools… e.g. merge, compress')}">
+      <input id="search" type="search" enterkeyhint="search" class="inp !rounded-2xl !py-3.5 !pl-11 sm:!pr-12 glass" placeholder="${tr('Search tools… e.g. merge, compress')}">
+      <kbd class="kbd hidden sm:block absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none">/</kbd>
     </div>
+    ${(() => { const rec = getRecent(); return rec.length ? `
+    <div class="fade-in mt-4 flex flex-wrap items-center justify-center gap-2 text-xs" style="animation-delay:220ms">
+      <span class="inline-flex items-center gap-1.5 text-slate-500">${icon('clock', 'w-3.5 h-3.5')} ${tr('Recently used')}:</span>
+      ${rec.map(id => { const t = TOOLS.find(x => x.id === id); return `<a href="#${id}" class="recent-link"><span class="w-4 h-4 rounded-md bg-gradient-to-br ${t.grad} grid place-items-center text-white">${icon(t.icon, 'w-2.5 h-2.5')}</span>${tr(t.title)}</a>`; }).join('')}
+    </div>` : ''; })()}
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
-    <div id="toolGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5"></div>
+    <div id="cats" class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 pb-1 mb-5 sm:mb-7 sm:flex-wrap sm:justify-center" role="tablist">
+      ${CATS.map(([k, l]) => `<button type="button" role="tab" data-cat="${k}" aria-selected="${k === homeCat}" class="chip ${k === homeCat ? 'on' : ''}">${tr(l)} <span class="opacity-60 font-medium">${k === 'all' ? TOOLS.length : TOOLS.filter(t => t.cat === k).length}</span></button>`).join('')}
+    </div>
+    <div id="toolGrid" class="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5"></div>
     <p id="noTools" class="hidden text-center text-slate-500 py-10">${tr('No tools match your search.')}</p>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-20 grid md:grid-cols-3 gap-4 sm:gap-5">
@@ -364,41 +452,51 @@ function renderHome() {
       </div>`).join('')}
   </section>`;
   const grid = $('#toolGrid');
-  const draw = q => {
-    const list = TOOLS.filter(t => !q || [tr(t.title), tr(t.desc), t.title, t.desc].join(' ').toLowerCase().includes(q));
+  const draw = () => {
+    const q = $('#search').value.trim().toLowerCase();
+    // A search looks across every category; otherwise the selected chip filters.
+    const list = TOOLS.filter(t => q ? [tr(t.title), tr(t.desc), t.title, t.desc].join(' ').toLowerCase().includes(q) : (homeCat === 'all' || t.cat === homeCat));
     grid.innerHTML = list.map((t, i) => `
-      <a href="#${t.id}" class="tool-card glass rounded-3xl p-6 block group fade-in" style="--glow:${t.glow};animation-delay:${i * 35}ms">
+      <a href="#${t.id}" class="tool-card glass rounded-3xl p-5 sm:p-6 block group fade-in" style="--glow:${t.glow};animation-delay:${i * 30}ms">
         <span class="sheen"></span>
         <div class="flex items-start justify-between">
-          <div class="icon-bubble w-12 h-12 rounded-2xl bg-gradient-to-br ${t.grad} grid place-items-center text-white" style="--glow:${t.glow}">${icon(t.icon, 'w-6 h-6')}</div>
+          <div class="icon-bubble w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br ${t.grad} grid place-items-center text-white" style="--glow:${t.glow}">${icon(t.icon, 'w-5 h-5 sm:w-6 sm:h-6')}</div>
           <span class="w-8 h-8 rounded-full grid place-items-center bg-white border border-slate-200 text-slate-500 group-hover:text-white group-hover:bg-violet-500 group-hover:-rotate-45 transition duration-300">${icon('arrowRight', 'w-4 h-4')}</span>
         </div>
-        <h3 class="font-display text-lg font-semibold mt-5">${tr(t.title)}</h3>
+        <h3 class="font-display text-lg font-semibold mt-4 sm:mt-5 flex items-center gap-2 flex-wrap">${tr(t.title)}${t.isNew ? `<span class="new-badge">${tr('New')}</span>` : ''}</h3>
         <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">${tr(t.desc)}</p>
       </a>`).join('');
     $('#noTools').classList.toggle('hidden', list.length > 0);
   };
-  draw('');
-  $('#search').addEventListener('input', e => draw(e.target.value.trim().toLowerCase()));
+  draw();
+  $('#search').addEventListener('input', draw);
+  $('#cats').addEventListener('click', e => {
+    const b = e.target.closest('[data-cat]'); if (!b) return;
+    homeCat = b.dataset.cat;
+    $$('[data-cat]').forEach(x => { const on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-selected', on); });
+    if ($('#search').value) $('#search').value = '';
+    draw();
+  });
 }
 
 /* ================= Tool view ================= */
 function renderTool(t) {
   T = t;
   markNav();
+  pushRecent(t.id);
   app.innerHTML = `
   <section class="max-w-7xl mx-auto px-3 sm:px-6 pt-7 sm:pt-9 pb-20">
     <a href="#" class="fade-in inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition">${icon('arrowLeft', 'w-4 h-4')} ${tr('All tools')}</a>
-    <div class="fade-in flex items-center gap-4 mt-5 mb-7" style="animation-delay:50ms">
-      <div class="icon-bubble w-14 h-14 shrink-0 rounded-2xl bg-gradient-to-br ${t.grad} grid place-items-center text-white" style="--glow:${t.glow}">${icon(t.icon, 'w-7 h-7')}</div>
-      <div class="min-w-0"><h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">${tr(t.title)}</h1><p class="text-slate-500 text-sm sm:text-base">${tr(t.desc)}</p></div>
+    <div class="fade-in flex items-center gap-3 sm:gap-4 mt-4 sm:mt-5 mb-5 sm:mb-7" style="animation-delay:50ms">
+      <div class="icon-bubble w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-2xl bg-gradient-to-br ${t.grad} grid place-items-center text-white" style="--glow:${t.glow}">${icon(t.icon, 'w-6 h-6 sm:w-7 sm:h-7')}</div>
+      <div class="min-w-0"><h1 class="font-display text-xl min-[400px]:text-2xl sm:text-3xl font-bold tracking-tight">${tr(t.title)}</h1><p class="text-slate-500 text-sm sm:text-base">${tr(t.desc)}</p></div>
     </div>
-    <div class="grid lg:grid-cols-[1fr_360px] gap-5 items-start">
-      <div id="work" class="glass rounded-3xl p-3 sm:p-6 min-h-[440px] transition fade-in" style="animation-delay:100ms"></div>
+    <div class="grid lg:grid-cols-[minmax(0,1fr)_360px] gap-4 sm:gap-5 items-start">
+      <div id="work" class="glass rounded-3xl p-3 sm:p-6 min-h-[280px] sm:min-h-[440px] min-w-0 transition fade-in" style="animation-delay:100ms"></div>
       <aside class="glass rounded-3xl p-5 sm:p-6 lg:sticky lg:top-24 fade-in" style="animation-delay:150ms">
         <h2 class="font-display font-semibold text-lg mb-5 flex items-center gap-2">${icon('sliders', 'w-4 h-4 text-violet-600')} ${tr('Options')}</h2>
         <div id="opts" class="space-y-5"></div>
-        <button id="runBtn" class="btn-primary w-full mt-6" disabled>${tr(t.action)} ${icon('arrowRight', 'w-4 h-4')}</button>
+        <button id="runBtn" class="btn-primary w-full mt-6" title="${tr('Shortcut: Ctrl + Enter')}" disabled>${tr(t.action)} ${icon('arrowRight', 'w-4 h-4')}</button>
         <p class="text-[11px] text-slate-400 mt-3 text-center flex items-center justify-center gap-1.5">${icon('shield', 'w-3 h-3')} ${tr('Processed locally in your browser')}</p>
       </aside>
     </div>
@@ -432,9 +530,10 @@ function renderTool(t) {
 }
 
 function onWorkClick(e) {
-  const b = e.target.closest('[data-act],[data-rm],[data-mv],[data-rot],[data-del],[data-pg]');
+  const b = e.target.closest('[data-act],[data-rm],[data-mv],[data-rot],[data-del],[data-pg],[data-pnav]');
   if (!b) return;
   const d = b.dataset;
+  if (d.pnav) { S.view = Math.min(S.files[0].pageCount, Math.max(1, (S.view || 1) + +d.pnav)); return showView(); }
   if (d.act === 'add' || d.act === 'browse') return $('#fileInput').click();
   if (d.act === 'clear') return clearFiles();
   if (d.rm != null) { const [f] = S.files.splice(+d.rm, 1); f.url && URL.revokeObjectURL(f.url); try { f.pdf && f.pdf.destroy(); } catch (er) {} return renderWork(); }
@@ -517,7 +616,7 @@ function preparePages() {
         const c = await renderPage(f.pdf, p.src + 1, { width: 220 });
         p.thumb = c.toDataURL('image/jpeg', .75);
         const img = $(`[data-pid="${p.id}"] img`);
-        if (img) { img.src = p.thumb; img.classList.remove('opacity-0'); }
+        if (img) { img.src = p.thumb; img.classList.remove('opacity-0'); const sp = img.parentElement.querySelector('.animate-spin'); if (sp) sp.parentElement.remove(); }
       } catch (e) { console.warn(e); }
     }
   })();
@@ -527,14 +626,14 @@ function preparePages() {
 function dropzoneHTML() {
   const img = !!T.isImage, many = !!T.multiple;
   return `
-  <button data-act="browse" class="dropzone w-full min-h-[400px] rounded-2xl flex flex-col items-center justify-center text-center p-8 group">
+  <button data-act="browse" class="dropzone w-full min-h-[256px] sm:min-h-[400px] rounded-2xl flex flex-col items-center justify-center text-center p-5 sm:p-8 group">
     <div class="relative">
       <div class="absolute -inset-4 blur-2xl bg-gradient-to-br ${T.grad} opacity-40 rounded-full group-hover:opacity-70 transition duration-500"></div>
-      <div class="relative icon-bubble w-20 h-20 rounded-3xl bg-gradient-to-br ${T.grad} grid place-items-center text-white float-y" style="--glow:${T.glow}">${icon('upload', 'w-9 h-9')}</div>
+      <div class="relative icon-bubble w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-gradient-to-br ${T.grad} grid place-items-center text-white float-y" style="--glow:${T.glow}">${icon('upload', 'w-7 h-7 sm:w-9 sm:h-9')}</div>
     </div>
-    <h3 class="font-display text-xl sm:text-2xl font-semibold mt-8">${tr(img ? 'Drop your images here' : many ? 'Drop your PDFs here' : 'Drop your PDF here')}</h3>
+    <h3 class="font-display text-lg min-[400px]:text-xl sm:text-2xl font-semibold mt-6 sm:mt-8">${tr(img ? 'Drop your images here' : many ? 'Drop your PDFs here' : 'Drop your PDF here')}</h3>
     <p class="text-slate-500 mt-2 text-sm">${tr('or click to browse from your device')}${many ? tr(' · select multiple files') : ''}</p>
-    <span class="btn-primary mt-7 pointer-events-none">${icon('plus', 'w-4 h-4')} ${tr(img ? 'Choose images' : many ? 'Choose files' : 'Choose file')}</span>
+    <span class="btn-primary mt-6 sm:mt-7 pointer-events-none">${icon('plus', 'w-4 h-4')} ${tr(img ? 'Choose images' : many ? 'Choose files' : 'Choose file')}</span>
   </button>`;
 }
 function summaryText() {
@@ -573,7 +672,27 @@ function renderWork() {
   if (T.id === 'organize') sortable($('#sortGrid'), S.pages);
   if (T.id === 'split') { const r = $('#ranges'); if (r && document.activeElement !== r) r.value = toRanges(S.selected); }
   IMPL[T.id].afterRender && IMPL[T.id].afterRender();
+  if (T.bigPreview && S.files.length) showView();
   updateRun();
+}
+
+/* Render page S.view of the loaded PDF into the large preview (cached per page). */
+async function showView() {
+  const f = S.files[0], im = $('#thumbImg'); if (!f || !im || !f.pdf) return;
+  const n = S.view || 1, st = S, lbl = $('#pvLabel');
+  if (lbl) lbl.textContent = tr('Page {n} of {total}', { n, total: f.pageCount });
+  $$('[data-pnav]').forEach(b => { const dir = +b.dataset.pnav; b.disabled = dir < 0 ? n <= 1 : n >= f.pageCount; b.classList.toggle('opacity-40', b.disabled); });
+  try {
+    f.views = f.views || {};
+    if (!f.views[n]) {
+      const c = await renderPage(f.pdf, n, { width: 760 });
+      f.views[n] = { url: c.toDataURL('image/jpeg', .86), pw: c.pw, ph: c.ph };
+      c.width = c.height = 0;
+    }
+    if (S !== st || (S.view || 1) !== n || !$('#thumbImg')) return;
+    $('#thumbImg').src = f.views[n].url;
+    const impl = IMPL[T.id]; impl.onOpt && impl.onOpt({ target: {} });
+  } catch (e) { console.warn(e); }
 }
 
 function listHTML() {
@@ -601,7 +720,7 @@ function listHTML() {
         <span class="flex flex-col items-center gap-2 text-sm">${icon('plus', 'w-7 h-7')} ${tr(T.isImage ? 'Add images' : 'Add PDFs')}</span>
       </button>
   </div>
-  <p class="text-xs text-slate-400 mt-4 px-1">${tr('Tip: drag cards to reorder, or use the arrows.')}</p>`;
+  <p class="text-xs text-slate-400 mt-4 px-1">${tr('Tip: drag cards to reorder (press and hold on touch screens), or use the arrows.')}</p>`;
 }
 
 function pagesHTML() {
@@ -621,11 +740,27 @@ function pagesHTML() {
       </div>`).join('')}
   </div>
   ${!S.pages.length ? `<p class="text-center text-slate-500 py-16">${tr('All pages removed. Click <b>Clear</b> to start again.')}</p>` : ''}
-  <p class="text-xs text-slate-400 mt-4 px-1">${tr(sel ? 'Click pages to select them, or type ranges in the options panel.' : 'Drag pages to reorder · rotate or delete with the buttons.')}</p>`;
+  <p class="text-xs text-slate-400 mt-4 px-1">${tr(sel ? 'Click pages to select them, or type ranges in the options panel.' : 'Drag pages to reorder (press and hold on touch screens) · rotate or delete with the buttons.')}</p>`;
 }
 
 function singleHTML() {
   const f = S.files[0];
+  if (T.bigPreview) return `
+  <div class="flex flex-col items-center gap-3">
+    <p class="text-sm text-slate-500 text-center px-2 break-all">${trn(f.pageCount, '{n} page', '{n} pages')} · ${fmt(f.size)}</p>
+    <div class="p-2 sm:p-3 rounded-3xl glass-soft w-full max-w-[480px]">
+      <div class="relative w-full rounded-lg overflow-hidden ring-1 ring-slate-200 bg-white shadow-[0_20px_45px_-15px_rgba(15,23,42,.35)]">
+        <img id="thumbImg" src="${(f.views && f.views[S.view || 1]?.url) || f.thumb}" draggable="false" class="block w-full h-auto select-none">
+        <div id="ov" class="absolute inset-0 overflow-hidden ${T.id === 'sign' ? 'cursor-crosshair touch-none' : 'pointer-events-none'}"></div>
+      </div>
+    </div>
+    ${f.pageCount > 1 ? `<div class="flex items-center gap-2">
+      <button data-pnav="-1" class="mini-btn !w-10 !h-10 !rounded-xl" title="${tr('Previous page')}" aria-label="${tr('Previous page')}">${icon('chevL', 'w-4 h-4')}</button>
+      <span id="pvLabel" class="text-sm font-medium tabular-nums min-w-[7.5rem] text-center text-slate-600">${tr('Page {n} of {total}', { n: S.view || 1, total: f.pageCount })}</span>
+      <button data-pnav="1" class="mini-btn !w-10 !h-10 !rounded-xl" title="${tr('Next page')}" aria-label="${tr('Next page')}">${icon('chevR', 'w-4 h-4')}</button>
+    </div>` : ''}
+    ${T.id === 'sign' ? `<p class="text-xs text-slate-400 text-center px-2">${tr('Click or drag on the page to place your signature.')}</p>` : ''}
+  </div>`;
   return `
   <div class="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center sm:items-start p-1 sm:p-2">
     <div class="shrink-0 p-3 rounded-3xl glass-soft">
@@ -647,22 +782,45 @@ function singleHTML() {
 }
 
 /* ---------- Drag & drop sorting ---------- */
+// Pointer-based sorting: works with mouse, pen and touch (press & hold ~0.3s on touch, so normal scrolling still works).
 function sortable(container, arr) {
   if (!container) return;
-  let from = null;
-  $$('[data-idx]', container).forEach(el => {
-    el.draggable = true;
-    el.addEventListener('dragstart', e => { from = +el.dataset.idx; el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(from)); } catch (er) {} });
-    el.addEventListener('dragend', () => { el.classList.remove('dragging'); $$('.drop-target', container).forEach(x => x.classList.remove('drop-target')); });
-    el.addEventListener('dragover', e => { if (from === null) return; e.preventDefault(); el.classList.add('drop-target'); });
-    el.addEventListener('dragleave', () => el.classList.remove('drop-target'));
-    el.addEventListener('drop', e => {
-      if (from === null) return;
-      e.preventDefault(); e.stopPropagation();
-      const to = +el.dataset.idx;
-      if (from !== to) { move(arr, from, to); renderWork(); }
-      from = null;
-    });
+  container.addEventListener('contextmenu', e => { if (e.target.closest('[data-idx]')) e.preventDefault(); });
+  container.addEventListener('pointerdown', e => {
+    const el = e.target.closest('[data-idx]');
+    if (!el || e.target.closest('button') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    const from = +el.dataset.idx, x0 = e.clientX, y0 = e.clientY, touch = e.pointerType !== 'mouse';
+    let on = false, over = null, timer = null;
+    const begin = () => { on = true; el.classList.add('dragging'); if (touch && navigator.vibrate) { try { navigator.vibrate(12); } catch (er) {} } };
+    const mv = ev => {
+      if (ev.pointerId !== e.pointerId) return;
+      const dx = ev.clientX - x0, dy = ev.clientY - y0;
+      if (!on) {
+        if (touch) { if (Math.hypot(dx, dy) > 10) cleanup(); return; } // finger moved early → it's a scroll
+        if (Math.hypot(dx, dy) < 6) return;
+        begin();
+      }
+      el.style.transform = `translate(${dx}px, ${dy}px) scale(1.04)`;
+      const hit = document.elementFromPoint(ev.clientX, ev.clientY);
+      const t = hit && hit.closest('[data-idx]'), tgt = t && t !== el && container.contains(t) ? t : null;
+      if (tgt !== over) { over && over.classList.remove('drop-target'); over = tgt; over && over.classList.add('drop-target'); }
+    };
+    const blockScroll = ev => { if (on) ev.preventDefault(); };
+    const up = () => {
+      const to = over ? +over.dataset.idx : null, moved = on;
+      cleanup();
+      if (moved && to !== null && to !== from) { move(arr, from, to); renderWork(); }
+    };
+    function cleanup() {
+      clearTimeout(timer);
+      window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
+      document.removeEventListener('touchmove', blockScroll);
+      el.classList.remove('dragging'); el.style.transform = '';
+      over && over.classList.remove('drop-target');
+    }
+    if (touch) timer = setTimeout(begin, 300);
+    window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
+    document.addEventListener('touchmove', blockScroll, { passive: false });
   });
 }
 
@@ -696,14 +854,14 @@ function pageTargets(mode, input, total) {
 }
 
 /* ---------- Text image (any language) ---------- */
-async function textCanvas(text, px, color) {
+async function textCanvas(text, px, color, weight = 700) {
   const fam = `Inter, "Hind Siliguri", "Noto Sans", sans-serif`;
-  try { await document.fonts.load(`700 ${px}px "Hind Siliguri"`, text); await document.fonts.load(`700 ${px}px Inter`, text); } catch (e) {}
+  try { await document.fonts.load(`${weight} ${px}px "Hind Siliguri"`, text); await document.fonts.load(`${weight} ${px}px Inter`, text); } catch (e) {}
   const c = document.createElement('canvas'), ctx = c.getContext('2d');
-  ctx.font = `700 ${px}px ${fam}`;
+  ctx.font = `${weight} ${px}px ${fam}`;
   const w = Math.ceil(ctx.measureText(text).width + px * .4), h = Math.ceil(px * 1.45);
   c.width = w; c.height = h;
-  ctx.font = `700 ${px}px ${fam}`; ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `${weight} ${px}px ${fam}`; ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText(text, w / 2, h / 2);
   return c;
 }
@@ -714,6 +872,53 @@ function tileCenters(pw, ph, w, h, size) {
   for (let y = -ph * .4; y < ph * 1.4; y += sy, row++)
     for (let x = -pw * .4 + (row % 2 ? sx / 2 : 0); x < pw * 1.4; x += sx) pts.push([x, y]);
   return pts;
+}
+
+/* ---------- Page geometry (handles /Rotate and CropBox) ---------- */
+// "Visual" space = the page as a viewer shows it (after rotation), origin bottom-left.
+function visualFrame(page) {
+  const b = page.getCropBox(), r = norm(page.getRotation().angle), W = b.width, H = b.height;
+  const map = (vx, vy) => {
+    const [x, y] = r === 90 ? [W - vy, vx] : r === 180 ? [W - vx, H - vy] : r === 270 ? [vy, H - vx] : [vx, vy];
+    return [b.x + x, b.y + y];
+  };
+  return { VW: r % 180 ? H : W, VH: r % 180 ? W : H, r, map };
+}
+// Draw an image upright (as seen in viewers) centred on visual point (cx, cy).
+function drawUpright(page, fr, img, cx, cy, w, h) {
+  const [ux, uy] = fr.map(cx, cy), t = fr.r * Math.PI / 180, cos = Math.cos(t), sin = Math.sin(t);
+  page.drawImage(img, { x: ux - (w / 2) * cos + (h / 2) * sin, y: uy - (w / 2) * sin - (h / 2) * cos, width: w, height: h, rotate: degrees(fr.r) });
+}
+// Embed every page of a PDF into a new document as reusable XObjects (for resize / n-up).
+async function embedAll(f) {
+  const src = await loadPdfLib(f.buf), out = await PDFDocument.create(), pages = src.getPages(), items = [];
+  for (let i = 0; i < pages.length; i++) {
+    if (i % 10 === 0) busy(true, tr('Reading page {i} of {n}', { i: i + 1, n: pages.length }), i / pages.length * .5);
+    const p = pages[i], b = p.getCropBox(), r = norm(p.getRotation().angle);
+    let emb = null;
+    try { emb = await out.embedPage(p, { left: b.x, bottom: b.y, right: b.x + b.width, top: b.y + b.height }); }
+    catch (e) { console.warn('Page ' + (i + 1) + ' could not be embedded (probably blank)', e); }
+    items.push({ emb, r, vw: r % 180 ? b.height : b.width, vh: r % 180 ? b.width : b.height });
+  }
+  return { out, items };
+}
+// Draw an embedded page so it looks the way viewers show it, scaled by s, with its visual bottom-left at (ox, oy).
+function drawEmbedded(page, emb, ox, oy, s, r) {
+  if (!emb) return;
+  const W = emb.width * s, H = emb.height * s;
+  const [x, y] = { 0: [ox, oy], 90: [ox, oy + W], 180: [ox + W, oy + H], 270: [ox + H, oy] }[norm(r)];
+  page.drawPage(emb, { x, y, xScale: s, yScale: s, rotate: degrees(-norm(r)) });
+}
+// Crop a canvas to its non-transparent pixels.
+function trimCanvas(c, pad = 6) {
+  const w = c.width, h = c.height, d = c.getContext('2d').getImageData(0, 0, w, h).data;
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (d[(y * w + x) * 4 + 3] > 10) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  if (x1 < 0) return null;
+  const out = document.createElement('canvas');
+  out.width = x1 - x0 + 1 + pad * 2; out.height = y1 - y0 + 1 + pad * 2;
+  out.getContext('2d').drawImage(c, x0, y0, x1 - x0 + 1, y1 - y0 + 1, pad, pad, x1 - x0 + 1, y1 - y0 + 1);
+  return out;
 }
 
 /* ================= Tool implementations ================= */
@@ -1032,6 +1237,318 @@ const IMPL = {
       return { files: [{ name: f.name.replace(/\.pdf$/i, '') + '.pdf', blob: pdfBlob(bytes) }], note: tr('Metadata updated') };
     }
   },
+
+  /* ---------- Sign PDF ---------- */
+  sign: {
+    st: { strokes: [], uploadRaw: null, cx: .7, cy: .86, aspect: .36 },
+    INKS: ['#111827', '#1d4ed8', '#be123c'],
+    FONTS: ['Dancing Script', 'Great Vibes', 'Caveat'],
+    opts() {
+      const st = this.st, mode = st.mode || 'draw';
+      return `${field('Signature', seg('sigMode', [['draw', 'Draw'], ['type', 'Type'], ['upload', 'Upload']], mode))}
+      <div data-panel="draw" class="${mode === 'draw' ? '' : 'hidden'}">
+        <canvas id="sigPad" class="sig-pad block w-full h-36 sm:h-40 rounded-2xl touch-none"></canvas>
+        <div class="flex justify-between items-center gap-2 mt-2"><span class="text-xs text-slate-400">${tr('Sign with your mouse, finger or stylus')}</span>
+          <button type="button" data-sig="clear" class="btn-ghost !py-1.5 !px-3 !text-xs shrink-0">${icon('refresh', 'w-3.5 h-3.5')} ${tr('Clear')}</button></div>
+      </div>
+      <div data-panel="type" class="space-y-3 ${mode === 'type' ? '' : 'hidden'}">
+        <input id="sigText" class="inp" maxlength="40" autocomplete="name" placeholder="${tr('Type your name')}" value="${esc(st.text || '')}">
+        <div class="seg" style="display:grid;grid-template-columns:repeat(3,1fr)">${this.FONTS.map(fn => `<label><input type="radio" name="sigFont" value="${fn}" ${(st.font || this.FONTS[0]) === fn ? 'checked' : ''}><span style="font-family:'${fn}',cursive;font-size:1.25rem;font-weight:600;line-height:1.2">Sign</span></label>`).join('')}</div>
+      </div>
+      <div data-panel="upload" class="space-y-3 ${mode === 'upload' ? '' : 'hidden'}">
+        <button type="button" data-sig="upload" class="btn-ghost w-full !py-3">${icon('upload', 'w-4 h-4')} ${tr('Choose signature image')}</button>
+        <div id="sigUpPrev" class="sig-pad !cursor-default h-24 rounded-2xl grid place-items-center overflow-hidden p-2"><span class="text-xs text-slate-400 text-center px-3">${tr('PNG or JPG — a photo of your signature works too')}</span></div>
+        <label class="flex items-center gap-3 text-sm cursor-pointer"><input id="sigClean" type="checkbox" class="chk" ${st.clean !== false ? 'checked' : ''}> ${tr('Remove white background')}</label>
+        <input id="sigFile" type="file" accept="image/*" class="hidden">
+      </div>
+      <div id="inkBox" class="${mode === 'upload' ? 'hidden' : ''}">${field('Ink color', `<div class="flex gap-3 pl-1">${this.INKS.map(c => `<label class="cursor-pointer"><input type="radio" name="sigInk" value="${c}" class="sr-only" ${(st.ink || this.INKS[0]) === c ? 'checked' : ''}><span class="ink-dot" style="background:${c}"></span></label>`).join('')}</div>`)}</div>
+      ${field('Signature size', slider('sigSize', 8, 60, st.size || 28, '%'))}
+      ${field('Place on', seg('sigWhere', [['this', 'This page'], ['all', 'All pages'], ['custom', 'Custom']], 'this'))}
+      <div id="customBox" class="hidden">${field('Pages', `<input id="sigPages" class="inp" placeholder="${tr('e.g. 1, 3-5')}">`)}</div>`;
+    },
+    ink() { return getSeg('sigInk') || this.st.ink || this.INKS[0]; },
+    bind() {
+      const st = this.st, pad = $('#sigPad');
+      this.fitPad = () => {
+        const r = pad.getBoundingClientRect(); if (!r.width) return;
+        pad.width = Math.round(r.width * 2); pad.height = Math.round(r.height * 2); st.aspect = r.height / r.width;
+        this.paint(pad, this.ink());
+      };
+      requestAnimationFrame(this.fitPad);
+      if (this._onResize) window.removeEventListener('resize', this._onResize);
+      this._onResize = () => { if (document.body.contains(pad)) this.fitPad(); };
+      window.addEventListener('resize', this._onResize);
+      let cur = null;
+      const pt = e => { const r = pad.getBoundingClientRect(); return [(e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height]; };
+      pad.addEventListener('pointerdown', e => { e.preventDefault(); pad.setPointerCapture(e.pointerId); cur = [pt(e)]; st.strokes.push(cur); this.paint(pad, this.ink()); });
+      pad.addEventListener('pointermove', e => { if (!cur) return; const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; (evs.length ? evs : [e]).forEach(ev => cur.push(pt(ev))); this.paint(pad, this.ink()); });
+      const end = () => { if (cur) { cur = null; this.refresh(); } };
+      pad.addEventListener('pointerup', end); pad.addEventListener('pointercancel', end);
+      $('#opts').addEventListener('click', e => {
+        const b = e.target.closest('[data-sig]'); if (!b) return;
+        if (b.dataset.sig === 'clear') { st.strokes = []; this.paint(pad, this.ink()); this.refresh(); }
+        if (b.dataset.sig === 'upload') $('#sigFile').click();
+      });
+      $('#sigFile').addEventListener('change', e => {
+        const file = e.target.files[0]; e.target.value = ''; if (!file) return;
+        const url = URL.createObjectURL(file), im = new Image();
+        im.onload = () => {
+          const s = Math.min(1, 1400 / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(im.naturalWidth * s)); c.height = Math.max(1, Math.round(im.naturalHeight * s));
+          c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+          st.uploadRaw = c; this.refresh();
+        };
+        im.onerror = () => { URL.revokeObjectURL(url); toast(tr('Please choose image files (JPG, PNG, WEBP…)'), 'error'); };
+        im.src = url;
+      });
+    },
+    paint(c, ink) {
+      const ctx = c.getContext('2d'), W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = ink; ctx.lineWidth = Math.max(2, H * .024); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      for (const s of this.st.strokes) {
+        ctx.beginPath(); ctx.moveTo(s[0][0] * W, s[0][1] * H);
+        if (s.length === 1) ctx.lineTo(s[0][0] * W + .5, s[0][1] * H);
+        for (let i = 1; i < s.length - 1; i++) ctx.quadraticCurveTo(s[i][0] * W, s[i][1] * H, (s[i][0] + s[i + 1][0]) / 2 * W, (s[i][1] + s[i + 1][1]) / 2 * H);
+        if (s.length > 1) ctx.lineTo(s[s.length - 1][0] * W, s[s.length - 1][1] * H);
+        ctx.stroke();
+      }
+    },
+    async build() {
+      const mode = getSeg('sigMode') || 'draw', st = this.st;
+      if (mode === 'draw') {
+        if (!st.strokes.length) return null;
+        const c = document.createElement('canvas'); c.width = 1400; c.height = Math.round(1400 * (st.aspect || .36));
+        this.paint(c, this.ink()); return trimCanvas(c);
+      }
+      if (mode === 'type') {
+        const txt = ($('#sigText')?.value || '').trim(); if (!txt) return null;
+        const fn = getSeg('sigFont') || this.FONTS[0], px = 170, fam = `"${fn}", "Hind Siliguri", cursive`;
+        try { await document.fonts.load(`600 ${px}px "${fn}"`, txt); } catch (e) {}
+        const c = document.createElement('canvas'), ctx = c.getContext('2d');
+        ctx.font = `600 ${px}px ${fam}`;
+        c.width = Math.ceil(ctx.measureText(txt).width + px); c.height = Math.ceil(px * 1.9);
+        ctx.font = `600 ${px}px ${fam}`; ctx.fillStyle = this.ink(); ctx.textBaseline = 'middle'; ctx.fillText(txt, px / 2, c.height / 2);
+        return trimCanvas(c);
+      }
+      const raw = st.uploadRaw; if (!raw) return null;
+      const c = document.createElement('canvas'); c.width = raw.width; c.height = raw.height;
+      const ctx = c.getContext('2d'); ctx.drawImage(raw, 0, 0);
+      if ($('#sigClean') ? $('#sigClean').checked : st.clean !== false) {
+        const d = ctx.getImageData(0, 0, c.width, c.height), a = d.data;
+        for (let k = 0; k < a.length; k += 4) { const m = Math.min(a[k], a[k + 1], a[k + 2]); if (m > 222) a[k + 3] = 0; else if (m > 160) a[k + 3] = Math.round(a[k + 3] * (222 - m) / 62); }
+        ctx.putImageData(d, 0, 0);
+      }
+      return trimCanvas(c, 2) || c;
+    },
+    async refresh() {
+      const tok = (this._tok = (this._tok || 0) + 1);
+      const c = await this.build(); if (tok !== this._tok) return;
+      this.st.sig = c ? { url: c.toDataURL('image/png'), w: c.width, h: c.height, canvas: c } : null;
+      this.place();
+    },
+    place() {
+      const st = this.st, up = $('#sigUpPrev');
+      if (up && st.uploadRaw && getSeg('sigMode') === 'upload' && st.sig) up.innerHTML = `<img src="${st.sig.url}" class="max-h-full max-w-full object-contain">`;
+      const ov = $('#ov'); if (!ov) return;
+      if (!st.sig) { ov.innerHTML = `<div class="absolute inset-x-0 bottom-3 text-center pointer-events-none"><span class="text-[11px] bg-slate-800/80 text-white px-2.5 py-1 rounded-full">${tr('Create your signature in the options panel')}</span></div>`; return; }
+      ov.innerHTML = `<img src="${st.sig.url}" draggable="false" style="position:absolute;left:${st.cx * 100}%;top:${st.cy * 100}%;width:${+$('#sigSize').value}%;transform:translate(-50%,-50%);outline:1.5px dashed rgba(139,92,246,.95);outline-offset:4px;border-radius:2px;pointer-events:none">`;
+    },
+    onOpt(e) {
+      const st = this.st, mode = getSeg('sigMode') || 'draw', id = e && e.target && (e.target.name || e.target.id);
+      st.mode = mode;
+      $$('[data-panel]').forEach(p => p.classList.toggle('hidden', p.dataset.panel !== mode));
+      $('#inkBox').classList.toggle('hidden', mode === 'upload');
+      $('#customBox').classList.toggle('hidden', getSeg('sigWhere') !== 'custom');
+      if (id === 'sigMode' && mode === 'draw') requestAnimationFrame(() => this.fitPad && this.fitPad());
+      if (id === 'sigSize' || id === 'sigWhere' || id === 'sigPages') { st.size = +$('#sigSize').value; return this.place(); }
+      if (id === 'sigText') st.text = e.target.value;
+      if (id === 'sigFont') st.font = getSeg('sigFont');
+      if (id === 'sigClean') st.clean = e.target.checked;
+      if (id === 'sigInk') { st.ink = getSeg('sigInk'); const pad = $('#sigPad'); if (pad && pad.width) this.paint(pad, this.ink()); }
+      if (id === 'sigFile') return;
+      this.refresh();
+    },
+    afterRender() {
+      const ov = $('#ov'); if (!ov) return;
+      let down = false;
+      const setPos = ev => {
+        const r = ov.getBoundingClientRect();
+        this.st.cx = Math.min(1, Math.max(0, (ev.clientX - r.left) / r.width));
+        this.st.cy = Math.min(1, Math.max(0, (ev.clientY - r.top) / r.height));
+        this.place();
+      };
+      ov.addEventListener('pointerdown', ev => { down = true; try { ov.setPointerCapture(ev.pointerId); } catch (er) {} setPos(ev); });
+      ov.addEventListener('pointermove', ev => { if (down) setPos(ev); });
+      ov.addEventListener('pointerup', () => { down = false; });
+      ov.addEventListener('pointercancel', () => { down = false; });
+      this.refresh();
+    },
+    async run() {
+      const f = S.files[0], st = this.st;
+      await this.refresh();
+      if (!st.sig) throw new Error(tr('Create your signature first'));
+      const where = getSeg('sigWhere');
+      const set = where === 'all' ? new Set([...Array(f.pageCount).keys()]) : where === 'custom' ? pageTargets('custom', $('#sigPages').value, f.pageCount) : new Set([(S.view || 1) - 1]);
+      const doc = await loadPdfLib(f.buf), img = await doc.embedPng(await canvasBytes(st.sig.canvas, 'image/png')), frac = +$('#sigSize').value / 100;
+      doc.getPages().forEach((p, i) => {
+        if (!set.has(i)) return;
+        const fr = visualFrame(p), w = frac * fr.VW, h = w * st.sig.h / st.sig.w;
+        drawUpright(p, fr, img, st.cx * fr.VW, (1 - st.cy) * fr.VH, w, h);
+      });
+      const bytes = await doc.save();
+      return { files: [{ name: `${base(f.name)}_signed.pdf`, blob: pdfBlob(bytes) }], note: trn(set.size, 'Signature added to {n} page', 'Signature added to {n} pages') };
+    }
+  },
+
+  /* ---------- Crop PDF ---------- */
+  crop: {
+    IDS: ['cropT', 'cropR', 'cropB', 'cropL'],
+    opts() {
+      return `<label class="flex items-center gap-3 text-sm cursor-pointer"><input id="cropLink" type="checkbox" class="chk" checked> ${tr('Same margin on all sides')}</label>
+      ${[['cropT', 'Top'], ['cropR', 'Right'], ['cropB', 'Bottom'], ['cropL', 'Left']].map(([id, l]) => field(l, slider(id, 0, 45, 5, '%', .5))).join('')}
+      ${field('Apply to', seg('which', [['all', 'All'], ['odd', 'Odd'], ['even', 'Even'], ['custom', 'Custom']], 'all'))}
+      <div id="customBox" class="hidden">${field('Pages', `<input id="cropPages" class="inp" placeholder="${tr('e.g. 1, 3-5')}">`)}</div>
+      <div class="info">${tr('Cropping hides the outer area of each page. Use the arrows under the preview to check other pages.')}</div>`;
+    },
+    vals() { return this.IDS.map(id => +$('#' + id).value / 100); },
+    onOpt(e) {
+      $('#customBox').classList.toggle('hidden', getSeg('which') !== 'custom');
+      const id = e && e.target && e.target.id;
+      if (this.IDS.includes(id) && $('#cropLink').checked) this.IDS.forEach(k => { if (k !== id) { $('#' + k).value = e.target.value; $('#' + k + 'V').textContent = e.target.value + '%'; } });
+      const ov = $('#ov'); if (!ov) return;
+      const [t, r, b, l] = this.vals();
+      ov.innerHTML = `<div style="position:absolute;left:${l * 100}%;top:${t * 100}%;right:${r * 100}%;bottom:${b * 100}%;box-shadow:0 0 0 9999px rgba(15,13,26,.55);outline:2px dashed #fff;outline-offset:-1px"></div>`;
+    },
+    afterRender() { this.onOpt(); },
+    async run() {
+      const f = S.files[0], v = this.vals();
+      const set = pageTargets(getSeg('which'), $('#cropPages').value, f.pageCount);
+      const doc = await loadPdfLib(f.buf);
+      doc.getPages().forEach((p, i) => {
+        if (!set.has(i)) return;
+        // Sliders are in visual space; map them onto the unrotated page sides.
+        const k = (norm(p.getRotation().angle) / 90) | 0, u = [];
+        v.forEach((val, j) => { u[(j - k + 4) % 4] = val; });
+        const [t, r, b, l] = u, bx = p.getCropBox();
+        const box = [bx.x + l * bx.width, bx.y + b * bx.height, bx.width * (1 - l - r), bx.height * (1 - t - b)];
+        p.setMediaBox(...box); p.setCropBox(...box);
+      });
+      const bytes = await doc.save();
+      return { files: [{ name: `${base(f.name)}_cropped.pdf`, blob: pdfBlob(bytes) }], note: `${trn(set.size, '{n} page cropped', '{n} pages cropped')} · ${fmt(bytes.length)}` };
+    }
+  },
+
+  /* ---------- Resize pages ---------- */
+  resize: {
+    opts: () => `${field('Page size', seg('sheet', [['a4', 'A4'], ['letter', 'Letter'], ['legal', 'Legal'], ['a3', 'A3'], ['a5', 'A5']], 'a4'))}
+      ${field('Orientation', seg('orient', [['auto', 'Auto'], ['portrait', 'Portrait'], ['landscape', 'Landscape']], 'auto'))}
+      ${field('Margin', slider('rsMargin', 0, 72, 0, 'pt'))}
+      <div class="info">${tr('Every page is scaled to fit the new size without distortion and centred. Links and form fields are flattened.')}</div>`,
+    async run() {
+      const f = S.files[0], key = getSeg('sheet'), [sw, sh] = SHEETS[key], orient = getSeg('orient'), m = +$('#rsMargin').value;
+      const { out, items } = await embedAll(f);
+      items.forEach(({ emb, r, vw, vh }, i) => {
+        if (i % 10 === 0) busy(true, tr('Resizing page {i} of {n}', { i: i + 1, n: items.length }), .5 + i / items.length * .45);
+        const land = orient === 'landscape' || (orient === 'auto' && vw > vh);
+        const [pw, ph] = land ? [sh, sw] : [sw, sh];
+        const s = Math.min((pw - 2 * m) / vw, (ph - 2 * m) / vh);
+        drawEmbedded(out.addPage([pw, ph]), emb, (pw - vw * s) / 2, (ph - vh * s) / 2, s, r);
+      });
+      busy(true, tr('Saving…'), .97);
+      const bytes = await out.save();
+      return { files: [{ name: `${base(f.name)}_${key}.pdf`, blob: pdfBlob(bytes) }], note: `${trn(items.length, '{n} page', '{n} pages')} · ${key.toUpperCase()} · ${fmt(bytes.length)}` };
+    }
+  },
+
+  /* ---------- Pages per sheet (N-up) ---------- */
+  'n-up': {
+    GRID: { 2: [2, 1], 4: [2, 2], 6: [3, 2], 9: [3, 3] },
+    opts: () => `${field('Pages per sheet', seg('per', [['2', '2'], ['4', '4'], ['6', '6'], ['9', '9']], '2'))}
+      ${field('Sheet size', seg('sheet', [['a4', 'A4'], ['letter', 'Letter'], ['a3', 'A3']], 'a4'))}
+      ${field('Orientation', seg('orient', [['auto', 'Auto'], ['portrait', 'Portrait'], ['landscape', 'Landscape']], 'auto'))}
+      ${field('Spacing', slider('nuGap', 0, 36, 12, 'pt'))}
+      <label class="flex items-center gap-3 text-sm cursor-pointer"><input id="nuBorder" type="checkbox" class="chk" checked> ${tr('Draw a border around each page')}</label>`,
+    // Pick the orientation + grid that shows the first page biggest.
+    layout(n, sw, sh, orient, vw, vh, g) {
+      const [a, b] = this.GRID[n], cand = [];
+      for (const land of orient === 'auto' ? [false, true] : [orient === 'landscape'])
+        for (const [cols, rows] of [[a, b], [b, a]]) {
+          const [pw, ph] = land ? [sh, sw] : [sw, sh], cw = (pw - g * (cols + 1)) / cols, ch = (ph - g * (rows + 1)) / rows;
+          cand.push({ pw, ph, cols, rows, cw, ch, s: Math.min(cw / vw, ch / vh) });
+        }
+      return cand.sort((x, y) => y.s - x.s)[0];
+    },
+    async run() {
+      const f = S.files[0], n = +getSeg('per'), [sw, sh] = SHEETS[getSeg('sheet')], g = +$('#nuGap').value, border = $('#nuBorder').checked;
+      const { out, items } = await embedAll(f);
+      const L = this.layout(n, sw, sh, getSeg('orient'), items[0].vw, items[0].vh, g), sheets = Math.ceil(items.length / n);
+      let sheet = null;
+      items.forEach((it, i) => {
+        const k = i % n;
+        if (k === 0) { sheet = out.addPage([L.pw, L.ph]); busy(true, tr('Arranging sheet {i} of {n}', { i: i / n + 1, n: sheets }), .5 + i / items.length * .45); }
+        const col = k % L.cols, row = Math.floor(k / L.cols);
+        const s = Math.min(L.cw / it.vw, L.ch / it.vh), w = it.vw * s, h = it.vh * s;
+        const ox = g + col * (L.cw + g) + (L.cw - w) / 2, oy = L.ph - g - (row + 1) * L.ch - row * g + (L.ch - h) / 2;
+        drawEmbedded(sheet, it.emb, ox, oy, s, it.r);
+        if (border) sheet.drawRectangle({ x: ox, y: oy, width: w, height: h, borderColor: rgb(.72, .72, .78), borderWidth: .75 });
+      });
+      busy(true, tr('Saving…'), .97);
+      const bytes = await out.save();
+      return { files: [{ name: `${base(f.name)}_${n}-up.pdf`, blob: pdfBlob(bytes) }], note: `${trn(items.length, '{n} page', '{n} pages')} → ${trn(sheets, '{n} sheet', '{n} sheets')} · ${fmt(bytes.length)}` };
+    }
+  },
+
+  /* ---------- Header & footer ---------- */
+  'header-footer': {
+    opts: () => `${field('Header text', `<input id="hfHead" class="inp" maxlength="120" placeholder="${tr('Leave empty for none')}">`)}
+      ${field('Footer text', `<input id="hfFoot" class="inp" maxlength="120" value="${esc(tr('Page {n} of {total}'))}">`, 'Tokens: {n} page · {total} total pages · {date} today · {file} file name')}
+      ${field('Alignment', seg('hfAlign', [['left', 'Left'], ['center', 'Center'], ['right', 'Right']], 'center'))}
+      <div class="grid grid-cols-2 gap-3">${field('Font size', `<input id="hfSize" type="number" min="6" max="36" value="10" class="inp">`)}${field('Color', `<input id="hfColor" type="color" value="#475569" class="swatch !w-full">`)}</div>
+      ${field('Margin', slider('hfMargin', 10, 72, 24, 'pt'))}
+      <label class="flex items-center gap-3 text-sm cursor-pointer"><input id="hfSkip" type="checkbox" class="chk"> ${tr('Skip first page (cover)')}</label>`,
+    vals: () => ({ head: $('#hfHead').value, foot: $('#hfFoot').value, align: getSeg('hfAlign'), size: Math.min(36, Math.max(6, +$('#hfSize').value || 10)), color: $('#hfColor').value, m: +$('#hfMargin').value, skip: $('#hfSkip').checked }),
+    fill(tpl, n, total, f) {
+      const date = new Date().toLocaleDateString(LANG === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      return tpl.replace(/\{n\}/g, n).replace(/\{total\}/g, total).replace(/\{date\}/g, date).replace(/\{file\}/g, base(f.name));
+    },
+    onOpt() {
+      const ov = $('#ov'), f = S.files[0]; if (!ov || !f) return;
+      const v = this.vals(), s = ov.clientWidth / f.pw;
+      if (v.skip) { ov.innerHTML = `<span class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] bg-slate-800/80 text-white px-2 py-0.5 rounded-full whitespace-nowrap">${tr('Cover — no number')}</span>`; return; }
+      const hor = { left: `left:${v.m * s}px`, right: `right:${v.m * s}px`, center: 'left:50%;transform:translateX(-50%)' }[v.align];
+      const span = (tpl, vert) => tpl.trim() ? `<span style="position:absolute;${vert};${hor};font:500 ${Math.max(4, v.size * s)}px Inter,'Hind Siliguri',sans-serif;line-height:1;color:${v.color};white-space:nowrap">${esc(this.fill(tpl, 1, f.pageCount, f))}</span>` : '';
+      ov.innerHTML = span(v.head, `top:${v.m * s}px`) + span(v.foot, `bottom:${v.m * s}px`);
+    },
+    afterRender() { const im = $('#thumbImg'); if (im) { im.complete ? this.onOpt() : im.addEventListener('load', () => this.onOpt(), { once: true }); } },
+    async run() {
+      const f = S.files[0], v = this.vals();
+      if (!v.head.trim() && !v.foot.trim()) throw new Error(tr('Enter a header or footer text'));
+      const doc = await loadPdfLib(f.buf), pages = doc.getPages(), total = pages.length - (v.skip ? 1 : 0), cache = new Map();
+      // Text is rendered to an image so any language (incl. Bangla) works.
+      const stamp = async txt => {
+        if (!cache.has(txt)) { const c = await textCanvas(txt, v.size * 4, v.color, 500); cache.set(txt, { img: await doc.embedPng(await canvasBytes(c, 'image/png')), w: c.width / 4, h: c.height / 4 }); }
+        return cache.get(txt);
+      };
+      let done = 0;
+      for (let i = 0; i < pages.length; i++) {
+        if (v.skip && i === 0) continue;
+        if (i % 10 === 0) busy(true, tr('Stamping page {n}', { n: i + 1 }), i / pages.length);
+        const p = pages[i], fr = visualFrame(p), n = v.skip ? i : i + 1, pad = v.size * .2;
+        for (const [tpl, top] of [[v.head, true], [v.foot, false]]) {
+          const txt = this.fill(tpl, n, total, f).trim(); if (!txt) continue;
+          const st = await stamp(txt);
+          const cx = v.align === 'left' ? v.m - pad + st.w / 2 : v.align === 'right' ? fr.VW - v.m + pad - st.w / 2 : fr.VW / 2;
+          const cy = top ? fr.VH - v.m - v.size / 2 : v.m + v.size / 2;
+          drawUpright(p, fr, st.img, cx, cy, st.w, st.h);
+        }
+        done++;
+      }
+      busy(true, tr('Saving…'), .97);
+      const bytes = await doc.save();
+      return { files: [{ name: `${base(f.name)}_header-footer.pdf`, blob: pdfBlob(bytes) }], note: trn(done, 'Header & footer added to {n} page', 'Header & footer added to {n} pages') };
+    }
+  },
 };
 
 /* ================= Run & results ================= */
@@ -1060,7 +1577,7 @@ function showResults(out, quiet) {
         <div class="icon-bubble w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 grid place-items-center text-white" style="--glow:rgba(16,185,129,.6)">${icon('check', 'w-6 h-6')}</div>
         <div class="min-w-0"><h3 class="font-display font-semibold text-lg">${n > 1 ? tr('Done! {n} files are ready', { n }) : tr('Done! Your file is ready')}</h3><p class="text-sm text-slate-500">${note}</p></div>
       </div>
-      <div class="flex flex-wrap gap-2">
+      <div class="res-actions flex flex-wrap gap-2 w-full sm:w-auto">
         ${n > 1 ? `<button data-zip class="btn-primary">${icon('download', 'w-4 h-4')} ${tr('Download all (.zip)')}</button>` : `<button data-dl="0" class="btn-primary">${icon('download', 'w-4 h-4')} ${tr('Download {ext}', { ext: esc(out.files[0].name.split('.').pop().toUpperCase()) })}</button>`}
         <button data-wa class="btn-wa">${WA_SVG('w-5 h-5')} ${tr('Send on WhatsApp')}</button>
         ${out.text != null ? `<button data-copy class="btn-ghost !py-3">${icon('copy', 'w-4 h-4')} ${tr('Copy text')}</button>` : ''}
@@ -1134,7 +1651,7 @@ function openWaModal(f) {
   m.id = 'waModal';
   m.className = 'fixed inset-0 z-[70] grid place-items-center p-4 bg-slate-900/30 backdrop-blur-sm fade-in';
   m.innerHTML = `
-  <div class="glass rounded-3xl p-6 sm:p-7 w-full max-w-md relative">
+  <div class="glass rounded-3xl p-5 sm:p-7 w-full max-w-md relative max-h-[92vh] overflow-y-auto">
     <button data-close class="mini-btn absolute top-4 right-4" title="${tr('Close')}">${icon('x', 'w-4 h-4')}</button>
     <div class="flex items-center gap-3">
       <div class="icon-bubble w-12 h-12 rounded-2xl bg-gradient-to-br from-[#25D366] to-[#128C7E] grid place-items-center text-white" style="--glow:rgba(37,211,102,.55)">${WA_SVG('w-6 h-6')}</div>

@@ -20,6 +20,133 @@ const canvasBytes = (c, type, q) => new Promise((res, rej) => c.toBlob(b => b ? 
 const canvasBlob = (c, type, q) => new Promise((res, rej) => c.toBlob(b => b ? res(b) : rej(new Error('Canvas export failed')), type, q));
 const loadPdfLib = buf => PDFDocument.load(buf, { ignoreEncryption: true });
 
+/* ================= Language (English / বাংলা) ================= */
+const LS = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } },
+};
+let LANG = LS.get('pdfstudio-lang') === 'bn' ? 'bn' : 'en';
+const BN = {
+  // chrome
+  'PDF Studio — Merge, Split & Edit PDFs': 'PDF Studio — PDF মার্জ, স্প্লিট ও এডিট',
+  'Free · Private': 'ফ্রি · প্রাইভেট',
+  'PDF Studio · Everything runs locally in your browser — your files are never uploaded.': 'PDF Studio · সবকিছু আপনার ব্রাউজারেই চলে — আপনার ফাইল কখনো আপলোড হয় না।',
+  'Switch language': 'ভাষা পরিবর্তন করুন',
+  'Switch to dark mode': 'নাইট মোড চালু করুন',
+  'Switch to light mode': 'ডে মোড চালু করুন',
+  'Merge': 'মার্জ', 'Split': 'স্প্লিট', 'Compress': 'কমপ্রেস', 'Image → PDF': 'ছবি → PDF', 'PDF → Image': 'PDF → ছবি',
+  // tools
+  'Merge PDF': 'PDF মার্জ', 'Combine multiple PDFs into a single file in the order you want.': 'একাধিক PDF আপনার পছন্দের ক্রমে একটি ফাইলে একত্র করুন।', 'Merge PDFs': 'PDF মার্জ করুন',
+  'Split PDF': 'PDF স্প্লিট', 'Extract pages, split by ranges or break every page into its own file.': 'পেজ আলাদা করুন, রেঞ্জ অনুযায়ী ভাগ করুন বা প্রতিটি পেজ আলাদা ফাইলে নিন।',
+  'Organize Pages': 'পেজ সাজান', 'Drag to reorder, rotate or delete individual pages visually.': 'টেনে ক্রম বদলান, প্রতিটি পেজ ঘোরান বা মুছে ফেলুন।', 'Save changes': 'পরিবর্তন সেভ করুন',
+  'Compress PDF': 'PDF কমপ্রেস', 'Shrink file size by optimizing pages — great for email & uploads.': 'পেজ অপ্টিমাইজ করে ফাইলের সাইজ কমান — ইমেইল ও আপলোডের জন্য দারুণ।',
+  'Rotate PDF': 'PDF ঘোরান', 'Rotate all pages, odd/even pages or a custom set of pages.': 'সব পেজ, বিজোড়/জোড় পেজ বা নির্দিষ্ট কিছু পেজ ঘোরান।',
+  'Image to PDF': 'ছবি থেকে PDF', 'Turn JPG, PNG, WEBP and more into a clean, single PDF.': 'JPG, PNG, WEBP সহ নানা ছবিকে একটি পরিচ্ছন্ন PDF-এ রূপান্তর করুন।', 'Create PDF': 'PDF তৈরি করুন',
+  'PDF to Image': 'PDF থেকে ছবি', 'Convert each page into a high-quality PNG or JPG image.': 'প্রতিটি পেজকে উচ্চমানের PNG বা JPG ছবিতে রূপান্তর করুন।', 'Convert to images': 'ছবিতে রূপান্তর করুন',
+  'Add Watermark': 'ওয়াটারমার্ক যোগ', 'Stamp text over your pages — centered or tiled, any language.': 'পেজের ওপর লেখা বসান — মাঝখানে বা টাইল করে, যেকোনো ভাষায়।', 'Add watermark': 'ওয়াটারমার্ক যোগ করুন',
+  'Page Numbers': 'পেজ নম্বর', 'Add page numbers with custom position, style and format.': 'পছন্দমতো অবস্থান, স্টাইল ও ফরম্যাটে পেজ নম্বর যোগ করুন।', 'Add page numbers': 'পেজ নম্বর যোগ করুন',
+  'Extract Text': 'টেক্সট বের করুন', 'Pull all selectable text out of a PDF into a .txt file.': 'PDF থেকে সব সিলেক্টযোগ্য লেখা একটি .txt ফাইলে নিন।', 'Extract text': 'টেক্সট বের করুন',
+  'Edit Metadata': 'মেটাডেটা এডিট', 'Change title, author, subject and keywords of a PDF.': 'PDF-এর টাইটেল, লেখক, বিষয় ও কিওয়ার্ড বদলান।', 'Save metadata': 'মেটাডেটা সেভ করুন',
+  // home
+  '100% private — files never leave your device': '১০০% প্রাইভেট — ফাইল আপনার ডিভাইসের বাইরে যায় না',
+  'Every PDF tool,': 'সব PDF টুল,', 'beautifully simple.': 'দারুণ সহজে।',
+  'Merge, split, compress, convert and edit PDFs right in your browser. Fast, free and no uploads.': 'ব্রাউজারেই PDF মার্জ, স্প্লিট, কমপ্রেস, কনভার্ট ও এডিট করুন। দ্রুত, ফ্রি এবং কোনো আপলোড ছাড়াই।',
+  'Search tools… e.g. merge, compress': 'টুল খুঁজুন… যেমন: মার্জ, কমপ্রেস',
+  'No tools match your search.': 'আপনার খোঁজার সাথে কোনো টুল মেলেনি।',
+  'Private by design': 'শুরু থেকেই প্রাইভেট', 'Processing happens on your device with zero uploads, so sensitive documents stay yours.': 'সব প্রসেসিং আপনার ডিভাইসেই হয়, কোনো আপলোড নেই — তাই গোপন ডকুমেন্ট আপনারই থাকে।',
+  'Lightning fast': 'বিদ্যুৎ গতি', 'No waiting for servers. Merge, split and convert in seconds, even offline-ready.': 'সার্ভারের জন্য অপেক্ষা নেই। সেকেন্ডেই মার্জ, স্প্লিট ও কনভার্ট — অফলাইনেও প্রস্তুত।',
+  'No limits': 'কোনো সীমা নেই', 'No sign-up, no watermarks, no file caps — use every tool as often as you like.': 'সাইন-আপ নেই, ওয়াটারমার্ক নেই, ফাইলের সীমা নেই — যত খুশি ব্যবহার করুন।',
+  // tool view
+  'All tools': 'সব টুল', 'Options': 'অপশন', 'Processed locally in your browser': 'আপনার ব্রাউজারেই প্রসেস হয়',
+  'Please choose image files (JPG, PNG, WEBP…)': 'ছবির ফাইল বেছে নিন (JPG, PNG, WEBP…)', 'Please choose a PDF file': 'একটি PDF ফাইল বেছে নিন',
+  '{n} unsupported file(s) skipped': '{n}টি অসমর্থিত ফাইল বাদ দেওয়া হয়েছে',
+  'Reading {name}': '{name} পড়া হচ্ছে', "Couldn't read {name}": '{name} পড়া যায়নি',
+  '"{name}" is password-protected': '"{name}" পাসওয়ার্ড দিয়ে সুরক্ষিত', 'Couldn\'t open "{name}" — it may be damaged': '"{name}" খোলা যায়নি — ফাইলটি নষ্ট হতে পারে',
+  'Couldn\'t read image "{name}"': '"{name}" ছবিটি পড়া যায়নি',
+  'Drop your images here': 'আপনার ছবিগুলো এখানে ছাড়ুন', 'Drop your PDFs here': 'আপনার PDF গুলো এখানে ছাড়ুন', 'Drop your PDF here': 'আপনার PDF এখানে ছাড়ুন',
+  'or click to browse from your device': 'অথবা ক্লিক করে ডিভাইস থেকে বেছে নিন', ' · select multiple files': ' · একাধিক ফাইল বেছে নেওয়া যাবে',
+  'Choose images': 'ছবি বেছে নিন', 'Choose files': 'ফাইল বেছে নিন', 'Choose file': 'ফাইল বেছে নিন',
+  '{n} image': '{n}টি ছবি', '{n} images': '{n}টি ছবি', '{n} file': '{n}টি ফাইল', '{n} files': '{n}টি ফাইল', '{n} page': '{n} পেজ', '{n} pages': '{n} পেজ', '{n} pg': '{n} পেজ',
+  '{n} of {total} pages selected': '{total}টির মধ্যে {n}টি পেজ সিলেক্ট করা', 'was {n}': 'আগে ছিল {n}',
+  'Add more': 'আরও যোগ করুন', 'Replace': 'বদলান', 'Clear': 'মুছুন', 'Remove': 'সরান', 'Move left': 'বাঁয়ে সরান', 'Move right': 'ডানে সরান',
+  'Add images': 'ছবি যোগ করুন', 'Add PDFs': 'PDF যোগ করুন', 'Tip: drag cards to reorder, or use the arrows.': 'টিপ: কার্ড টেনে ক্রম বদলান, অথবা তীর চিহ্ন ব্যবহার করুন।',
+  'Page {n}': 'পেজ {n}', 'Rotate': 'ঘোরান', 'Delete': 'মুছুন',
+  'All pages removed. Click <b>Clear</b> to start again.': 'সব পেজ সরানো হয়েছে। আবার শুরু করতে <b>মুছুন</b> ক্লিক করুন।',
+  'Click pages to select them, or type ranges in the options panel.': 'পেজে ক্লিক করে সিলেক্ট করুন, অথবা অপশন প্যানেলে রেঞ্জ লিখুন।',
+  'Drag pages to reorder · rotate or delete with the buttons.': 'পেজ টেনে ক্রম বদলান · বাটন দিয়ে ঘোরান বা মুছুন।',
+  'Selected file': 'নির্বাচিত ফাইল', 'Pages': 'পেজ', 'Size': 'সাইজ',
+  'Invalid range "{part}"': 'ভুল রেঞ্জ "{part}"', '"{part}" is outside 1–{total}': '"{part}" 1–{total} সীমার বাইরে', 'Enter the pages to apply to': 'কোন পেজগুলোতে প্রয়োগ হবে তা লিখুন',
+  // merge
+  'Add two or more PDFs, then drag the cards into the order you want. Pages are combined from first card to last.': 'দুই বা ততোধিক PDF যোগ করুন, তারপর কার্ডগুলো পছন্দের ক্রমে টেনে সাজান। প্রথম কার্ড থেকে শেষ কার্ড পর্যন্ত পেজ একত্র হবে।',
+  'Output file name': 'আউটপুট ফাইলের নাম', '.pdf is added automatically': '.pdf নিজে থেকেই যোগ হবে', 'Merging {name}': '{name} মার্জ হচ্ছে', 'Saving…': 'সেভ হচ্ছে…',
+  // split
+  'Selected pages are combined into one new PDF (in the order typed).': 'সিলেক্ট করা পেজগুলো একটি নতুন PDF-এ একত্র হবে (যে ক্রমে লিখেছেন)।',
+  'Each range becomes its own PDF. e.g. 1-3, 4-6, 7': 'প্রতিটি রেঞ্জ আলাদা PDF হবে। যেমন: 1-3, 4-6, 7', 'Every page becomes a separate PDF.': 'প্রতিটি পেজ আলাদা PDF হবে।',
+  'Split mode': 'স্প্লিট মোড', 'Extract': 'বের করুন', 'By ranges': 'রেঞ্জ অনুযায়ী', 'Every page': 'প্রতিটি পেজ', 'Pages / ranges': 'পেজ / রেঞ্জ', 'e.g. 1-3, 5, 8-10': 'যেমন: 1-3, 5, 8-10',
+  'All': 'সব', 'Odd': 'বিজোড়', 'Even': 'জোড়', 'None': 'নেই', 'Custom': 'কাস্টম',
+  'Multiple results can be downloaded together as a ZIP.': 'একাধিক ফলাফল একসাথে ZIP হিসেবে ডাউনলোড করা যাবে।',
+  'Select some pages or type a range first': 'আগে কিছু পেজ সিলেক্ট করুন বা রেঞ্জ লিখুন', 'Creating file {i} of {n}': '{n}টির মধ্যে {i} নম্বর ফাইল তৈরি হচ্ছে',
+  '{n} file created from {total} pages': '{total} পেজ থেকে {n}টি ফাইল তৈরি হয়েছে', '{n} files created from {total} pages': '{total} পেজ থেকে {n}টি ফাইল তৈরি হয়েছে',
+  // organize
+  'Drag pages to reorder. Use ⟳ to rotate and 🗑 to delete a page.': 'পেজ টেনে ক্রম বদলান। ঘোরাতে ⟳ আর মুছতে 🗑 ব্যবহার করুন।',
+  'Rotate all': 'সব ঘোরান', 'Reverse': 'উল্টে দিন', 'Reset': 'রিসেট', 'Rebuilding document…': 'ডকুমেন্ট নতুন করে তৈরি হচ্ছে…',
+  // rotate
+  'Rotation': 'ঘূর্ণন', 'Apply to': 'যেখানে প্রয়োগ হবে', 'e.g. 1, 3-5': 'যেমন: 1, 3-5', '90° counter-clockwise': '90° উল্টো দিকে',
+  '{n} page rotated {a}': '{n}টি পেজ {a} ঘোরানো হয়েছে', '{n} pages rotated {a}': '{n}টি পেজ {a} ঘোরানো হয়েছে',
+  // compress
+  'Compression level': 'কমপ্রেশন লেভেল', 'Light': 'হালকা', 'Balanced': 'মাঝারি', 'Strong': 'শক্তিশালী',
+  'Light keeps the best quality; Strong gives the smallest file.': 'হালকা সেরা মান রাখে; শক্তিশালী সবচেয়ে ছোট ফাইল দেয়।', 'Convert to grayscale': 'সাদা-কালো করুন',
+  'Pages are re-rendered as optimized images. Great for scans and image-heavy PDFs; text will no longer be selectable.': 'পেজগুলো অপ্টিমাইজড ছবি হিসেবে নতুন করে তৈরি হয়। স্ক্যান ও ছবি-ভরা PDF-এর জন্য দারুণ; তবে লেখা আর সিলেক্ট করা যাবে না।',
+  'Compressing page {i} of {n}': '{n}টির মধ্যে {i} নম্বর পেজ কমপ্রেস হচ্ছে', '{p}% smaller': '{p}% ছোট',
+  'Result is {size} — this PDF is already well optimized. Try "Strong" or grayscale.': 'ফলাফল {size} — এই PDF আগে থেকেই ভালোভাবে অপ্টিমাইজড। "শক্তিশালী" বা সাদা-কালো চেষ্টা করুন।',
+  // image to pdf
+  'Page size': 'পেজ সাইজ', 'Fit image': 'ছবির মাপে', 'Orientation': 'ওরিয়েন্টেশন', 'Auto': 'অটো', 'Portrait': 'খাড়া', 'Landscape': 'আড়াআড়ি',
+  'Margin': 'মার্জিন', 'Small': 'ছোট', 'Large': 'বড়', 'Adding {name}': '{name} যোগ হচ্ছে',
+  // pdf to image
+  'Image format': 'ছবির ফরম্যাট', 'Quality': 'মান', 'Normal': 'সাধারণ', 'High': 'উচ্চ', 'Ultra': 'আল্ট্রা',
+  'Higher quality = larger images (Normal ≈ 72 DPI, High ≈ 144, Ultra ≈ 216).': 'বেশি মান = বড় ছবি (সাধারণ ≈ 72 DPI, উচ্চ ≈ 144, আল্ট্রা ≈ 216)।',
+  'All pages (or e.g. 1-3, 6)': 'সব পেজ (অথবা যেমন: 1-3, 6)', 'Rendering page {n}': '{n} নম্বর পেজ রেন্ডার হচ্ছে',
+  '{n} image created': '{n}টি ছবি তৈরি হয়েছে', '{n} images created': '{n}টি ছবি তৈরি হয়েছে',
+  // watermark
+  'Watermark text': 'ওয়াটারমার্কের লেখা', 'Any language works — English, বাংলা, العربية…': 'যেকোনো ভাষা চলবে — English, বাংলা, العربية…',
+  'Layout': 'লেআউট', 'Center': 'মাঝখানে', 'Tiled': 'টাইল করা', 'Font size': 'ফন্ট সাইজ', 'Opacity': 'স্বচ্ছতা', 'Color': 'রং',
+  'Enter some watermark text': 'ওয়াটারমার্কের লেখা দিন', 'Stamping page {n}': '{n} নম্বর পেজে বসানো হচ্ছে',
+  'Watermark added to {n} page': '{n}টি পেজে ওয়াটারমার্ক যোগ হয়েছে', 'Watermark added to {n} pages': '{n}টি পেজে ওয়াটারমার্ক যোগ হয়েছে',
+  // page numbers
+  'Position': 'অবস্থান', 'Format': 'ফরম্যাট', 'Start at': 'শুরু হবে', 'Skip first page (cover)': 'প্রথম পেজ বাদ দিন (কভার)', 'Cover — no number': 'কভার — নম্বর নেই',
+  'Numbers added to {n} page': '{n}টি পেজে নম্বর যোগ হয়েছে', 'Numbers added to {n} pages': '{n}টি পেজে নম্বর যোগ হয়েছে',
+  // extract text
+  'Page separators': 'পেজ বিভাজক', 'Show': 'দেখান', 'Hide': 'লুকান',
+  "Works with PDFs that contain real text. Scanned documents (images of text) won't produce output.": 'আসল লেখা আছে এমন PDF-এ কাজ করে। স্ক্যান করা ডকুমেন্টে (লেখার ছবি) কোনো আউটপুট আসবে না।',
+  'Reading page {i} of {n}': '{n}টির মধ্যে {i} নম্বর পেজ পড়া হচ্ছে',
+  '{c} characters from {n} page': '{n} পেজ থেকে {c}টি অক্ষর', '{c} characters from {n} pages': '{n} পেজ থেকে {c}টি অক্ষর',
+  'No selectable text found — this PDF may be scanned images.': 'সিলেক্টযোগ্য কোনো লেখা পাওয়া যায়নি — এই PDF সম্ভবত স্ক্যান করা ছবি।',
+  // metadata
+  'Title': 'টাইটেল', 'Author': 'লেখক', 'Subject': 'বিষয়', 'Keywords': 'কিওয়ার্ড', 'Creator': 'ক্রিয়েটর', 'Producer': 'প্রডিউসার',
+  'comma, separated, words': 'কমা, দিয়ে, আলাদা, শব্দ', 'Metadata updated': 'মেটাডেটা আপডেট হয়েছে',
+  // run & results
+  'Processing…': 'প্রসেস হচ্ছে…', 'Something went wrong': 'কিছু একটা সমস্যা হয়েছে',
+  'Done! {n} files are ready': 'হয়ে গেছে! {n}টি ফাইল প্রস্তুত', 'Done! Your file is ready': 'হয়ে গেছে! আপনার ফাইল প্রস্তুত',
+  'Download all (.zip)': 'সব ডাউনলোড (.zip)', 'Download {ext}': '{ext} ডাউনলোড', 'Download': 'ডাউনলোড', 'Send on WhatsApp': 'WhatsApp-এ পাঠান', 'Copy text': 'টেক্সট কপি',
+  'Could not create ZIP': 'ZIP তৈরি করা যায়নি', 'Text copied to clipboard': 'টেক্সট ক্লিপবোর্ডে কপি হয়েছে', 'Press Ctrl+C to copy the selected text': 'সিলেক্ট করা লেখা কপি করতে Ctrl+C চাপুন',
+  'Packing ZIP…': 'ZIP তৈরি হচ্ছে…', 'Could not prepare the file': 'ফাইল প্রস্তুত করা যায়নি', 'Shared! Pick WhatsApp from the share menu': 'শেয়ার হয়েছে! শেয়ার মেনু থেকে WhatsApp বেছে নিন',
+  'Saved {name}': '{name} সেভ হয়েছে', 'Download cancelled': 'ডাউনলোড বাতিল হয়েছে', 'Please wait a moment, then try again': 'একটু অপেক্ষা করে আবার চেষ্টা করুন',
+  'Download failed: {e}': 'ডাউনলোড ব্যর্থ: {e}', 'unknown error': 'অজানা ত্রুটি',
+  // whatsapp modal
+  'Close': 'বন্ধ করুন', 'Save the file to your device': 'ফাইলটি আপনার ডিভাইসে সেভ করুন', 'Download file': 'ফাইল ডাউনলোড',
+  'Open WhatsApp and attach it': 'WhatsApp খুলে ফাইলটি যুক্ত করুন', 'Phone with country code (optional) e.g. 8801XXXXXXXXX': 'কান্ট্রি কোডসহ ফোন নম্বর (ঐচ্ছিক) যেমন: 8801XXXXXXXXX',
+  '📄 Sending you "{name}"': '📄 আপনাকে "{name}" পাঠাচ্ছি', 'Open WhatsApp': 'WhatsApp খুলুন',
+  "WhatsApp links can't carry files, so attach the downloaded file (📎) in the chat. On phones, the button shares the file directly.": 'WhatsApp লিংকে ফাইল পাঠানো যায় না, তাই ডাউনলোড করা ফাইলটি চ্যাটে (📎) যুক্ত করুন। ফোনে বাটনটি সরাসরি ফাইল শেয়ার করে।',
+};
+/** Translate an English UI string (falls back to English) and fill {placeholders}. */
+const tr = (s, vars) => {
+  let out = (LANG === 'bn' && BN[s]) || s;
+  if (vars) out = out.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+  return out;
+};
+/** Singular/plural helper: {n} is filled automatically. */
+const trn = (n, one, many, vars) => tr(n === 1 ? one : many, { n, ...vars });
+
 const ICONS = {
   merge: '<path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 17 9 5 9-5"/>',
   split: '<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88M14.47 14.48 20 20M8.12 8.12 12 12"/>',
@@ -53,6 +180,8 @@ const ICONS = {
   swap: '<path d="m16 3 4 4-4 4M20 7H4M8 21l-4-4 4-4M4 17h16"/>',
   refresh: '<path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/>',
   external: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+  moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
 };
 const WA_SVG = (cls = 'w-5 h-5') => `<svg class="${cls}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.04 21.5h-.01a9.45 9.45 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.23-.36a9.43 9.43 0 0 1-1.45-5.03c0-5.22 4.25-9.47 9.48-9.47 2.53 0 4.91.99 6.7 2.78a9.41 9.41 0 0 1 2.77 6.7c0 5.22-4.25 9.47-9.47 9.47zm8.06-17.53A11.33 11.33 0 0 0 12.04.63C5.76.63.65 5.74.65 12.02c0 2.01.52 3.97 1.52 5.69L.55 23.6l6.04-1.58a11.36 11.36 0 0 0 5.44 1.39h.01c6.28 0 11.39-5.11 11.39-11.39 0-3.04-1.18-5.9-3.33-8.05z"/></svg>`;
 const icon = (k, cls = 'w-5 h-5') => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k]}</svg>`;
@@ -74,8 +203,8 @@ const TOOLS = [
 ];
 
 /* ================= UI primitives ================= */
-const field = (label, inner, hint = '') => `<div><label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">${label}</label>${inner}${hint ? `<p class="text-xs text-slate-400 mt-1.5 leading-relaxed">${hint}</p>` : ''}</div>`;
-const seg = (name, opts, val, cols) => `<div class="seg" ${cols ? `style="display:grid;grid-template-columns:repeat(${cols},1fr)"` : ''}>${opts.map(([v, l]) => `<label><input type="radio" name="${name}" value="${v}" ${String(v) === String(val) ? 'checked' : ''}><span>${l}</span></label>`).join('')}</div>`;
+const field = (label, inner, hint = '') => `<div><label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">${tr(label)}</label>${inner}${hint ? `<p class="text-xs text-slate-400 mt-1.5 leading-relaxed">${tr(hint)}</p>` : ''}</div>`;
+const seg = (name, opts, val, cols) => `<div class="seg" ${cols ? `style="display:grid;grid-template-columns:repeat(${cols},1fr)"` : ''}>${opts.map(([v, l]) => `<label><input type="radio" name="${name}" value="${v}" ${String(v) === String(val) ? 'checked' : ''}><span>${tr(l)}</span></label>`).join('')}</div>`;
 const getSeg = n => $(`input[name="${n}"]:checked`)?.value;
 const slider = (id, min, max, val, unit = '', step = 1) => `<div class="flex items-center gap-3"><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}" data-unit="${unit}" class="flex-1"><span id="${id}V" class="text-sm tabular-nums w-14 text-right text-slate-600">${val}${unit}</span></div>`;
 
@@ -104,12 +233,12 @@ async function saveFile(name, blob) {
   initDl();
   if (dlPromise && !dlNS) await Promise.race([dlPromise, sleep(6000)]);
   if (dlNS) {
-    try { await dlNS.save({ filename: name, data: blob }); toast('Saved ' + name, 'success'); }
+    try { await dlNS.save({ filename: name, data: blob }); toast(tr('Saved {name}', { name }), 'success'); }
     catch (e) {
       const c = e && e.code;
-      if (c === 'declined') toast('Download cancelled');
-      else if (c === 'rate_limited') toast('Please wait a moment, then try again');
-      else toast('Download failed: ' + ((e && e.message) || c || 'unknown error'), 'error');
+      if (c === 'declined') toast(tr('Download cancelled'));
+      else if (c === 'rate_limited') toast(tr('Please wait a moment, then try again'));
+      else toast(tr('Download failed: {e}', { e: (e && e.message) || c || tr('unknown error') }), 'error');
     }
     return;
   }
@@ -153,34 +282,75 @@ window.addEventListener('hashchange', route);
 window.addEventListener('dragover', e => { if ([...(e.dataTransfer?.types || [])].includes('Files')) e.preventDefault(); });
 window.addEventListener('drop', e => { if ([...(e.dataTransfer?.types || [])].includes('Files')) e.preventDefault(); });
 
-$('#navLinks').innerHTML = ['merge', 'split', 'compress', 'img-to-pdf', 'pdf-to-img'].map(id => {
-  const t = TOOLS.find(x => x.id === id);
-  return `<a href="#${id}" data-nav="${id}" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 transition">${{ 'img-to-pdf': 'Image → PDF', 'pdf-to-img': 'PDF → Image' }[id] || t.title.replace(' PDF', '')}</a>`;
-}).join('');
+const NAV = { merge: 'Merge', split: 'Split', compress: 'Compress', 'img-to-pdf': 'Image → PDF', 'pdf-to-img': 'PDF → Image' };
+function renderNav() {
+  $('#navLinks').innerHTML = Object.keys(NAV).map(id => `<a href="#${id}" data-nav="${id}" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 transition">${tr(NAV[id])}</a>`).join('');
+  markNav();
+}
+function markNav() {
+  $$('[data-nav]').forEach(a => { const on = !!T && a.dataset.nav === T.id; a.classList.toggle('bg-slate-900/5', on); a.classList.toggle('text-slate-900', on); });
+}
+
+/* ---------- Day / night mode ---------- */
+const isDark = () => document.documentElement.classList.contains('dark');
+function updateThemeBtn() {
+  const b = $('#themeBtn'), label = tr(isDark() ? 'Switch to light mode' : 'Switch to dark mode');
+  b.innerHTML = icon(isDark() ? 'sun' : 'moon', 'w-4 h-4');
+  b.title = label; b.setAttribute('aria-label', label);
+}
+$('#themeBtn').addEventListener('click', () => {
+  const dark = !isDark();
+  document.documentElement.classList.toggle('dark', dark);
+  LS.set('pdfstudio-theme', dark ? 'dark' : 'light');
+  updateThemeBtn();
+});
+
+/* ---------- Language switch ---------- */
+function applyChrome() {
+  document.documentElement.lang = LANG;
+  document.title = tr('PDF Studio — Merge, Split & Edit PDFs');
+  $$('[data-i18n]').forEach(el => { el.textContent = tr(el.dataset.i18n); });
+  const lb = $('#langBtn');
+  lb.textContent = LANG === 'bn' ? 'English' : 'বাংলা';
+  lb.title = tr('Switch language'); lb.setAttribute('aria-label', lb.title);
+  renderNav(); updateThemeBtn();
+}
+$('#langBtn').addEventListener('click', () => {
+  LANG = LANG === 'bn' ? 'en' : 'bn';
+  LS.set('pdfstudio-lang', LANG);
+  applyChrome();
+  if (!T) return renderHome();
+  // Re-draw the current tool in the new language, keeping the loaded files.
+  const res = S.results;
+  renderTool(T);
+  const impl = IMPL[T.id];
+  if (S.files.length && impl.onLoad) Promise.resolve(impl.onLoad()).catch(console.error);
+  if (res) showResults(res, true);
+});
 
 /* ================= Home ================= */
 function renderHome() {
   T = null;
-  $$('[data-nav]').forEach(a => a.classList.remove('bg-slate-900/5', 'text-slate-900'));
+  markNav();
   app.innerHTML = `
   <section class="relative pt-14 sm:pt-20 pb-10 sm:pb-14 text-center px-4">
     <div class="fade-in inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-xs text-violet-700">
-      ${icon('shield', 'w-3.5 h-3.5 text-violet-600')} 100% private — files never leave your device
+      ${icon('shield', 'w-3.5 h-3.5 text-violet-600')} ${tr('100% private — files never leave your device')}
     </div>
     <h1 class="fade-in font-display text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-7xl font-bold tracking-tight mt-7" style="animation-delay:60ms">
-      Every PDF tool,<br><span class="text-gradient">beautifully simple.</span>
+      ${tr('Every PDF tool,')}<br><span class="text-gradient">${tr('beautifully simple.')}</span>
     </h1>
     <p class="fade-in mt-5 text-base sm:text-lg text-slate-600/80 max-w-xl mx-auto" style="animation-delay:120ms">
-      Merge, split, compress, convert and edit PDFs right in your browser. Fast, free and no uploads.
+      ${tr('Merge, split, compress, convert and edit PDFs right in your browser. Fast, free and no uploads.')}
     </p>
     <div class="fade-in mt-8 max-w-md mx-auto relative" style="animation-delay:180ms">
       <span class="absolute z-10 left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">${icon('search', 'w-4 h-4')}</span>
-      <input id="search" class="inp !rounded-2xl !py-3.5 !pl-11 glass" placeholder="Search tools… e.g. merge, compress">
+      <input id="search" class="inp !rounded-2xl !py-3.5 !pl-11 glass" placeholder="${tr('Search tools… e.g. merge, compress')}">
     </div>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
     <div id="toolGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5"></div>
-    <p id="noTools" class="hidden text-center text-slate-500 py-10">No tools match your search.</p>
+    <p id="noTools" class="hidden text-center text-slate-500 py-10">${tr('No tools match your search.')}</p>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-20 grid md:grid-cols-3 gap-4 sm:gap-5">
     ${[['shield', 'Private by design', 'Processing happens on your device with zero uploads, so sensitive documents stay yours.', 'from-violet-500 to-fuchsia-500'],
@@ -189,13 +359,13 @@ function renderHome() {
       .map(([ic, t, d, g], i) => `
       <div class="glass rounded-3xl p-6 fade-in" style="animation-delay:${i * 80}ms">
         <div class="icon-bubble w-11 h-11 rounded-2xl bg-gradient-to-br ${g} grid place-items-center text-white">${icon(ic)}</div>
-        <h3 class="font-display font-semibold text-lg mt-4">${t}</h3>
-        <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">${d}</p>
+        <h3 class="font-display font-semibold text-lg mt-4">${tr(t)}</h3>
+        <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">${tr(d)}</p>
       </div>`).join('')}
   </section>`;
   const grid = $('#toolGrid');
   const draw = q => {
-    const list = TOOLS.filter(t => !q || (t.title + ' ' + t.desc).toLowerCase().includes(q));
+    const list = TOOLS.filter(t => !q || [tr(t.title), tr(t.desc), t.title, t.desc].join(' ').toLowerCase().includes(q));
     grid.innerHTML = list.map((t, i) => `
       <a href="#${t.id}" class="tool-card glass rounded-3xl p-6 block group fade-in" style="--glow:${t.glow};animation-delay:${i * 35}ms">
         <span class="sheen"></span>
@@ -203,8 +373,8 @@ function renderHome() {
           <div class="icon-bubble w-12 h-12 rounded-2xl bg-gradient-to-br ${t.grad} grid place-items-center text-white" style="--glow:${t.glow}">${icon(t.icon, 'w-6 h-6')}</div>
           <span class="w-8 h-8 rounded-full grid place-items-center bg-white border border-slate-200 text-slate-500 group-hover:text-white group-hover:bg-violet-500 group-hover:-rotate-45 transition duration-300">${icon('arrowRight', 'w-4 h-4')}</span>
         </div>
-        <h3 class="font-display text-lg font-semibold mt-5">${t.title}</h3>
-        <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">${t.desc}</p>
+        <h3 class="font-display text-lg font-semibold mt-5">${tr(t.title)}</h3>
+        <p class="text-sm text-slate-500 mt-1.5 leading-relaxed">${tr(t.desc)}</p>
       </a>`).join('');
     $('#noTools').classList.toggle('hidden', list.length > 0);
   };
@@ -215,21 +385,21 @@ function renderHome() {
 /* ================= Tool view ================= */
 function renderTool(t) {
   T = t;
-  $$('[data-nav]').forEach(a => { const on = a.dataset.nav === t.id; a.classList.toggle('bg-slate-900/5', on); a.classList.toggle('text-slate-900', on); });
+  markNav();
   app.innerHTML = `
   <section class="max-w-7xl mx-auto px-3 sm:px-6 pt-7 sm:pt-9 pb-20">
-    <a href="#" class="fade-in inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition">${icon('arrowLeft', 'w-4 h-4')} All tools</a>
+    <a href="#" class="fade-in inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-900 transition">${icon('arrowLeft', 'w-4 h-4')} ${tr('All tools')}</a>
     <div class="fade-in flex items-center gap-4 mt-5 mb-7" style="animation-delay:50ms">
       <div class="icon-bubble w-14 h-14 shrink-0 rounded-2xl bg-gradient-to-br ${t.grad} grid place-items-center text-white" style="--glow:${t.glow}">${icon(t.icon, 'w-7 h-7')}</div>
-      <div class="min-w-0"><h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">${t.title}</h1><p class="text-slate-500 text-sm sm:text-base">${t.desc}</p></div>
+      <div class="min-w-0"><h1 class="font-display text-2xl sm:text-3xl font-bold tracking-tight">${tr(t.title)}</h1><p class="text-slate-500 text-sm sm:text-base">${tr(t.desc)}</p></div>
     </div>
     <div class="grid lg:grid-cols-[1fr_360px] gap-5 items-start">
       <div id="work" class="glass rounded-3xl p-3 sm:p-6 min-h-[440px] transition fade-in" style="animation-delay:100ms"></div>
       <aside class="glass rounded-3xl p-5 sm:p-6 lg:sticky lg:top-24 fade-in" style="animation-delay:150ms">
-        <h2 class="font-display font-semibold text-lg mb-5 flex items-center gap-2">${icon('sliders', 'w-4 h-4 text-violet-600')} Options</h2>
+        <h2 class="font-display font-semibold text-lg mb-5 flex items-center gap-2">${icon('sliders', 'w-4 h-4 text-violet-600')} ${tr('Options')}</h2>
         <div id="opts" class="space-y-5"></div>
-        <button id="runBtn" class="btn-primary w-full mt-6" disabled>${t.action} ${icon('arrowRight', 'w-4 h-4')}</button>
-        <p class="text-[11px] text-slate-400 mt-3 text-center flex items-center justify-center gap-1.5">${icon('shield', 'w-3 h-3')} Processed locally in your browser</p>
+        <button id="runBtn" class="btn-primary w-full mt-6" disabled>${tr(t.action)} ${icon('arrowRight', 'w-4 h-4')}</button>
+        <p class="text-[11px] text-slate-400 mt-3 text-center flex items-center justify-center gap-1.5">${icon('shield', 'w-3 h-3')} ${tr('Processed locally in your browser')}</p>
       </aside>
     </div>
     <div id="results" class="mt-5"></div>
@@ -294,17 +464,17 @@ function clearFiles() {
 async function addFiles(files) {
   const img = !!T.isImage;
   const ok = files.filter(f => img ? f.type.startsWith('image/') : (f.type === 'application/pdf' || /\.pdf$/i.test(f.name)));
-  if (!ok.length) return toast(img ? 'Please choose image files (JPG, PNG, WEBP…)' : 'Please choose a PDF file', 'error');
-  if (ok.length < files.length) toast(`${files.length - ok.length} unsupported file(s) skipped`);
+  if (!ok.length) return toast(tr(img ? 'Please choose image files (JPG, PNG, WEBP…)' : 'Please choose a PDF file'), 'error');
+  if (ok.length < files.length) toast(tr('{n} unsupported file(s) skipped', { n: files.length - ok.length }));
   const list = T.multiple ? ok : [ok[0]];
   if (!T.multiple) { disposeState(); S = freshState(); }
   $('#results').innerHTML = '';
   const st = S;
   for (let i = 0; i < list.length; i++) {
     const f = list[i];
-    busy(true, `Reading ${f.name}`, i / list.length);
+    busy(true, tr('Reading {name}', { name: f.name }), i / list.length);
     try { const entry = img ? await loadImage(f) : await loadPdf(f); if (S !== st) return; S.files.push(entry); }
-    catch (e) { console.error(e); toast(e.message || `Couldn't read ${f.name}`, 'error'); }
+    catch (e) { console.error(e); toast(e.message || tr("Couldn't read {name}", { name: f.name }), 'error'); }
   }
   busy(false);
   if (!S.files.length) return renderWork();
@@ -318,7 +488,7 @@ async function loadPdf(f) {
   const buf = await f.arrayBuffer();
   let pdf;
   try { pdf = await openPdfJs(buf); }
-  catch (e) { throw new Error(e && e.name === 'PasswordException' ? `"${f.name}" is password-protected` : `Couldn't open "${f.name}" — it may be damaged`); }
+  catch (e) { throw new Error(e && e.name === 'PasswordException' ? tr('"{name}" is password-protected', { name: f.name }) : tr(`Couldn't open "{name}" — it may be damaged`, { name: f.name })); }
   const c = await renderPage(pdf, 1, { width: 280 });
   const entry = { id: uid(), name: f.name, size: f.size, buf, pageCount: pdf.numPages, thumb: c.toDataURL('image/jpeg', .82), pw: c.pw, ph: c.ph, pdf };
   if (T.kind === 'list') { pdf.destroy(); entry.pdf = null; }
@@ -329,7 +499,7 @@ function loadImage(f) {
     const url = URL.createObjectURL(f);
     const im = new Image();
     im.onload = () => res({ id: uid(), file: f, name: f.name, size: f.size, type: f.type, url, thumb: url, w: im.naturalWidth, h: im.naturalHeight, el: im });
-    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error(`Couldn't read image "${f.name}"`)); };
+    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error(tr(`Couldn't read image "{name}"`, { name: f.name }))); };
     im.src = url;
   });
 }
@@ -356,26 +526,25 @@ function preparePages() {
 /* ---------- Workspace renderers ---------- */
 function dropzoneHTML() {
   const img = !!T.isImage, many = !!T.multiple;
-  const what = img ? 'images' : many ? 'PDFs' : 'PDF';
   return `
   <button data-act="browse" class="dropzone w-full min-h-[400px] rounded-2xl flex flex-col items-center justify-center text-center p-8 group">
     <div class="relative">
       <div class="absolute -inset-4 blur-2xl bg-gradient-to-br ${T.grad} opacity-40 rounded-full group-hover:opacity-70 transition duration-500"></div>
       <div class="relative icon-bubble w-20 h-20 rounded-3xl bg-gradient-to-br ${T.grad} grid place-items-center text-white float-y" style="--glow:${T.glow}">${icon('upload', 'w-9 h-9')}</div>
     </div>
-    <h3 class="font-display text-xl sm:text-2xl font-semibold mt-8">Drop your ${what} here</h3>
-    <p class="text-slate-500 mt-2 text-sm">or click to browse from your device${many ? ' · select multiple files' : ''}</p>
-    <span class="btn-primary mt-7 pointer-events-none">${icon('plus', 'w-4 h-4')} Choose ${img ? 'images' : many ? 'files' : 'file'}</span>
+    <h3 class="font-display text-xl sm:text-2xl font-semibold mt-8">${tr(img ? 'Drop your images here' : many ? 'Drop your PDFs here' : 'Drop your PDF here')}</h3>
+    <p class="text-slate-500 mt-2 text-sm">${tr('or click to browse from your device')}${many ? tr(' · select multiple files') : ''}</p>
+    <span class="btn-primary mt-7 pointer-events-none">${icon('plus', 'w-4 h-4')} ${tr(img ? 'Choose images' : many ? 'Choose files' : 'Choose file')}</span>
   </button>`;
 }
 function summaryText() {
-  const f = S.files;
+  const f = S.files, b = n => `<b class="text-slate-900">${n}</b>`;
   if (T.kind === 'list') {
-    const pages = T.isImage ? '' : ` · ${f.reduce((a, x) => a + x.pageCount, 0)} pages`;
-    return `<b class="text-slate-900">${f.length}</b> ${T.isImage ? 'image' : 'file'}${f.length > 1 ? 's' : ''}${pages} · ${fmt(f.reduce((a, x) => a + x.size, 0))}`;
+    const pages = T.isImage ? '' : ` · ${trn(f.reduce((a, x) => a + x.pageCount, 0), '{n} page', '{n} pages')}`;
+    return `${trn(f.length, T.isImage ? '{n} image' : '{n} file', T.isImage ? '{n} images' : '{n} files', { n: b(f.length) })}${pages} · ${fmt(f.reduce((a, x) => a + x.size, 0))}`;
   }
-  if (T.id === 'split') return `<b class="text-slate-900">${S.selected.size}</b> of ${S.pages.length} pages selected`;
-  if (T.id === 'organize') return `<b class="text-slate-900">${S.pages.length}</b> page${S.pages.length !== 1 ? 's' : ''}${S.pages.length !== f[0].pageCount ? ` <span class="text-slate-400">(was ${f[0].pageCount})</span>` : ''}`;
+  if (T.id === 'split') return tr('{n} of {total} pages selected', { n: b(S.selected.size), total: S.pages.length });
+  if (T.id === 'organize') return `${trn(S.pages.length, '{n} page', '{n} pages', { n: b(S.pages.length) })}${S.pages.length !== f[0].pageCount ? ` <span class="text-slate-400">(${tr('was {n}', { n: f[0].pageCount })})</span>` : ''}`;
   return `<span class="truncate">${esc(f[0].name)}</span>`;
 }
 function updateSummary() { const s = $('#summary'); if (s) s.innerHTML = summaryText(); }
@@ -391,8 +560,8 @@ function renderWork() {
     <div class="flex flex-wrap items-center justify-between gap-3 mb-5 px-1">
       <div id="summary" class="text-sm text-slate-600 min-w-0">${summaryText()}</div>
       <div class="flex gap-2">
-        <button data-act="add" class="btn-ghost">${icon(T.multiple ? 'plus' : 'swap', 'w-4 h-4')} ${T.multiple ? 'Add more' : 'Replace'}</button>
-        <button data-act="clear" class="btn-ghost hover:!text-rose-600 hover:!border-rose-200">${icon('x', 'w-4 h-4')} Clear</button>
+        <button data-act="add" class="btn-ghost">${icon(T.multiple ? 'plus' : 'swap', 'w-4 h-4')} ${tr(T.multiple ? 'Add more' : 'Replace')}</button>
+        <button data-act="clear" class="btn-ghost hover:!text-rose-600 hover:!border-rose-200">${icon('x', 'w-4 h-4')} ${tr('Clear')}</button>
       </div>
     </div>`;
   let body = '';
@@ -415,24 +584,24 @@ function listHTML() {
         <div class="relative aspect-[3/4] rounded-xl bg-slate-100/80 overflow-hidden grid place-items-center">
           <img src="${f.thumb}" draggable="false" class="max-w-[88%] max-h-[88%] object-contain rounded shadow-[0_6px_20px_rgba(15,23,42,.18)]">
           <span class="absolute top-2 left-2 min-w-[26px] h-[26px] px-1.5 rounded-lg bg-white/90 backdrop-blur text-slate-700 shadow-sm text-xs font-semibold grid place-items-center border border-slate-200">${i + 1}</span>
-          <button data-rm="${i}" class="absolute top-2 right-2 mini-btn !bg-white/90 !text-slate-600 hover:!bg-rose-500 hover:!text-white" title="Remove">${icon('x', 'w-3.5 h-3.5')}</button>
+          <button data-rm="${i}" class="absolute top-2 right-2 mini-btn !bg-white/90 !text-slate-600 hover:!bg-rose-500 hover:!text-white" title="${tr('Remove')}">${icon('x', 'w-3.5 h-3.5')}</button>
         </div>
         <div class="px-1 pt-2.5 pb-0.5">
           <p class="text-[13px] font-medium truncate" title="${esc(f.name)}">${esc(f.name)}</p>
           <div class="flex items-center justify-between mt-1">
-            <span class="text-[11px] text-slate-500">${T.isImage ? `${f.w}×${f.h}` : `${f.pageCount} pg`} · ${fmt(f.size)}</span>
+            <span class="text-[11px] text-slate-500">${T.isImage ? `${f.w}×${f.h}` : tr('{n} pg', { n: f.pageCount })} · ${fmt(f.size)}</span>
             <span class="flex gap-1">
-              <button data-mv="${i},-1" class="mini-btn !w-6 !h-6 ${i === 0 ? 'opacity-30 pointer-events-none' : ''}" title="Move left">${icon('chevL', 'w-3.5 h-3.5')}</button>
-              <button data-mv="${i},1" class="mini-btn !w-6 !h-6 ${i === n - 1 ? 'opacity-30 pointer-events-none' : ''}" title="Move right">${icon('chevR', 'w-3.5 h-3.5')}</button>
+              <button data-mv="${i},-1" class="mini-btn !w-6 !h-6 ${i === 0 ? 'opacity-30 pointer-events-none' : ''}" title="${tr('Move left')}">${icon('chevL', 'w-3.5 h-3.5')}</button>
+              <button data-mv="${i},1" class="mini-btn !w-6 !h-6 ${i === n - 1 ? 'opacity-30 pointer-events-none' : ''}" title="${tr('Move right')}">${icon('chevR', 'w-3.5 h-3.5')}</button>
             </span>
           </div>
         </div>
       </div>`).join('')}
       <button data-act="add" class="rounded-2xl border-2 border-dashed border-slate-300 hover:border-violet-400 hover:bg-violet-50 transition grid place-items-center min-h-[200px] text-slate-500 hover:text-slate-900">
-        <span class="flex flex-col items-center gap-2 text-sm">${icon('plus', 'w-7 h-7')} Add ${T.isImage ? 'images' : 'PDFs'}</span>
+        <span class="flex flex-col items-center gap-2 text-sm">${icon('plus', 'w-7 h-7')} ${tr(T.isImage ? 'Add images' : 'Add PDFs')}</span>
       </button>
   </div>
-  <p class="text-xs text-slate-400 mt-4 px-1">Tip: drag cards to reorder, or use the arrows.</p>`;
+  <p class="text-xs text-slate-400 mt-4 px-1">${tr('Tip: drag cards to reorder, or use the arrows.')}</p>`;
 }
 
 function pagesHTML() {
@@ -445,14 +614,14 @@ function pagesHTML() {
           ${p.thumb ? '' : '<div class="absolute inset-0 grid place-items-center"><div class="w-6 h-6 rounded-full border-2 border-slate-200 border-t-violet-500 animate-spin"></div></div>'}
         </div>
         <div class="flex items-center justify-between mt-2 px-1 h-7">
-          <span class="text-xs text-slate-500 font-medium">${sel ? 'Page ' + (p.src + 1) : (i + 1) + (p.src !== i ? ` <span class="text-slate-400">(${p.src + 1})</span>` : '')}</span>
+          <span class="text-xs text-slate-500 font-medium">${sel ? tr('Page {n}', { n: p.src + 1 }) : (i + 1) + (p.src !== i ? ` <span class="text-slate-400">(${p.src + 1})</span>` : '')}</span>
           ${sel ? `<span class="check">${icon('check', 'w-3 h-3')}</span>` :
-            `<span class="flex gap-1"><button data-rot="${i}" class="mini-btn" title="Rotate">${icon('rotate', 'w-3.5 h-3.5')}</button><button data-del="${i}" class="mini-btn hover:!bg-rose-500 hover:!text-white" title="Delete">${icon('trash', 'w-3.5 h-3.5')}</button></span>`}
+            `<span class="flex gap-1"><button data-rot="${i}" class="mini-btn" title="${tr('Rotate')}">${icon('rotate', 'w-3.5 h-3.5')}</button><button data-del="${i}" class="mini-btn hover:!bg-rose-500 hover:!text-white" title="${tr('Delete')}">${icon('trash', 'w-3.5 h-3.5')}</button></span>`}
         </div>
       </div>`).join('')}
   </div>
-  ${!S.pages.length ? '<p class="text-center text-slate-500 py-16">All pages removed. Click <b>Clear</b> to start again.</p>' : ''}
-  <p class="text-xs text-slate-400 mt-4 px-1">${sel ? 'Click pages to select them, or type ranges in the options panel.' : 'Drag pages to reorder · rotate or delete with the buttons.'}</p>`;
+  ${!S.pages.length ? `<p class="text-center text-slate-500 py-16">${tr('All pages removed. Click <b>Clear</b> to start again.')}</p>` : ''}
+  <p class="text-xs text-slate-400 mt-4 px-1">${tr(sel ? 'Click pages to select them, or type ranges in the options panel.' : 'Drag pages to reorder · rotate or delete with the buttons.')}</p>`;
 }
 
 function singleHTML() {
@@ -466,11 +635,11 @@ function singleHTML() {
       </div>
     </div>
     <div class="flex-1 min-w-0 w-full">
-      <div class="text-[11px] uppercase tracking-wider text-violet-600 font-semibold">Selected file</div>
+      <div class="text-[11px] uppercase tracking-wider text-violet-600 font-semibold">${tr('Selected file')}</div>
       <h3 class="font-display text-xl font-semibold mt-1 break-all">${esc(f.name)}</h3>
       <div class="grid grid-cols-2 gap-3 mt-5 max-w-sm">
-        <div class="glass-soft rounded-2xl p-4"><div class="text-[11px] text-slate-500 uppercase tracking-wider">Pages</div><div class="font-display text-2xl font-semibold mt-1">${f.pageCount}</div></div>
-        <div class="glass-soft rounded-2xl p-4"><div class="text-[11px] text-slate-500 uppercase tracking-wider">Size</div><div class="font-display text-2xl font-semibold mt-1">${fmt(f.size)}</div></div>
+        <div class="glass-soft rounded-2xl p-4"><div class="text-[11px] text-slate-500 uppercase tracking-wider">${tr('Pages')}</div><div class="font-display text-2xl font-semibold mt-1">${f.pageCount}</div></div>
+        <div class="glass-soft rounded-2xl p-4"><div class="text-[11px] text-slate-500 uppercase tracking-wider">${tr('Size')}</div><div class="font-display text-2xl font-semibold mt-1">${fmt(f.size)}</div></div>
       </div>
       <div id="extra" class="mt-5"></div>
     </div>
@@ -502,9 +671,9 @@ function parseRanges(str, total) {
   const groups = [];
   for (const part of str.split(/[,;]+/).map(s => s.trim()).filter(Boolean)) {
     const m = part.match(/^(\d+)\s*(?:(-)\s*(\d+)?)?$/);
-    if (!m) throw new Error(`Invalid range "${part}"`);
+    if (!m) throw new Error(tr('Invalid range "{part}"', { part }));
     const a = +m[1], b = m[3] ? +m[3] : (m[2] ? total : a);
-    if (a < 1 || b < 1 || a > total || b > total) throw new Error(`"${part}" is outside 1–${total}`);
+    if (a < 1 || b < 1 || a > total || b > total) throw new Error(tr('"{part}" is outside 1–{total}', { part, total }));
     const g = [];
     if (a <= b) for (let i = a; i <= b; i++) g.push(i - 1); else for (let i = a; i >= b; i--) g.push(i - 1);
     groups.push(g);
@@ -522,7 +691,7 @@ function toRanges(set) {
 function pageTargets(mode, input, total) {
   if (mode === 'odd') return new Set([...Array(total).keys()].filter(i => i % 2 === 0));
   if (mode === 'even') return new Set([...Array(total).keys()].filter(i => i % 2 === 1));
-  if (mode === 'custom') { const g = parseRanges(input || '', total).flat(); if (!g.length) throw new Error('Enter the pages to apply to'); return new Set(g); }
+  if (mode === 'custom') { const g = parseRanges(input || '', total).flat(); if (!g.length) throw new Error(tr('Enter the pages to apply to')); return new Set(g); }
   return new Set([...Array(total).keys()]);
 }
 
@@ -550,19 +719,19 @@ function tileCenters(pw, ph, w, h, size) {
 /* ================= Tool implementations ================= */
 const IMPL = {
   merge: {
-    opts: () => `<div class="info">Add two or more PDFs, then drag the cards into the order you want. Pages are combined from first card to last.</div>
+    opts: () => `<div class="info">${tr('Add two or more PDFs, then drag the cards into the order you want. Pages are combined from first card to last.')}</div>
       ${field('Output file name', `<input id="outName" class="inp" value="merged">`, '.pdf is added automatically')}`,
     async run() {
       const out = await PDFDocument.create();
       for (let i = 0; i < S.files.length; i++) {
-        const f = S.files[i]; busy(true, `Merging ${f.name}`, i / S.files.length);
+        const f = S.files[i]; busy(true, tr('Merging {name}', { name: f.name }), i / S.files.length);
         const src = await loadPdfLib(f.buf);
         (await out.copyPages(src, src.getPageIndices())).forEach(p => out.addPage(p));
       }
-      busy(true, 'Saving…', .98);
+      busy(true, tr('Saving…'), .98);
       const bytes = await out.save();
       const name = (($('#outName').value || 'merged').trim().replace(/\.pdf$/i, '') || 'merged') + '.pdf';
-      return { files: [{ name, blob: pdfBlob(bytes) }], note: `${S.files.length} files · ${out.getPageCount()} pages · ${fmt(bytes.length)}` };
+      return { files: [{ name, blob: pdfBlob(bytes) }], note: `${trn(S.files.length, '{n} file', '{n} files')} · ${trn(out.getPageCount(), '{n} page', '{n} pages')} · ${fmt(bytes.length)}` };
     }
   },
 
@@ -570,10 +739,10 @@ const IMPL = {
     hints: { extract: 'Selected pages are combined into one new PDF (in the order typed).', ranges: 'Each range becomes its own PDF. e.g. 1-3, 4-6, 7', each: 'Every page becomes a separate PDF.' },
     opts() {
       return `${field('Split mode', seg('mode', [['extract', 'Extract'], ['ranges', 'By ranges'], ['each', 'Every page']], 'extract'))}
-      <div id="rangeBox">${field('Pages / ranges', `<input id="ranges" class="inp" placeholder="e.g. 1-3, 5, 8-10">`, `<span id="rangeHint">${this.hints.extract}</span>`)}
-        <div class="grid grid-cols-4 gap-2 mt-3">${[['all', 'All'], ['odd', 'Odd'], ['even', 'Even'], ['none', 'None']].map(([k, l]) => `<button data-sel="${k}" class="btn-ghost !px-2 !text-xs">${l}</button>`).join('')}</div>
+      <div id="rangeBox">${field('Pages / ranges', `<input id="ranges" class="inp" placeholder="${tr('e.g. 1-3, 5, 8-10')}">`, `<span id="rangeHint">${tr(this.hints.extract)}</span>`)}
+        <div class="grid grid-cols-4 gap-2 mt-3">${[['all', 'All'], ['odd', 'Odd'], ['even', 'Even'], ['none', 'None']].map(([k, l]) => `<button data-sel="${k}" class="btn-ghost !px-2 !text-xs">${tr(l)}</button>`).join('')}</div>
       </div>
-      <p id="eachHint" class="info hidden">${this.hints.each} Multiple results can be downloaded together as a ZIP.</p>`;
+      <p id="eachHint" class="info hidden">${tr(this.hints.each)} ${tr('Multiple results can be downloaded together as a ZIP.')}</p>`;
     },
     bind() {
       $('#opts').addEventListener('click', e => {
@@ -588,7 +757,7 @@ const IMPL = {
       const mode = getSeg('mode');
       $('#rangeBox').classList.toggle('hidden', mode === 'each');
       $('#eachHint').classList.toggle('hidden', mode !== 'each');
-      $('#rangeHint').textContent = this.hints[mode] || '';
+      $('#rangeHint').textContent = tr(this.hints[mode] || '');
       if (e.target.id === 'ranges' && S.files.length) {
         try { S.selected = new Set(parseRanges(e.target.value, S.files[0].pageCount).flat()); e.target.classList.remove('bad'); this.syncSel(); }
         catch (er) { e.target.classList.add('bad'); }
@@ -601,29 +770,29 @@ const IMPL = {
       else {
         const txt = $('#ranges').value.trim() || toRanges(S.selected);
         groups = parseRanges(txt, total);
-        if (!groups.length) throw new Error('Select some pages or type a range first');
+        if (!groups.length) throw new Error(tr('Select some pages or type a range first'));
         if (mode === 'extract') groups = [groups.flat()];
       }
       const src = await loadPdfLib(f.buf), files = [];
       for (let i = 0; i < groups.length; i++) {
-        busy(true, `Creating file ${i + 1} of ${groups.length}`, i / groups.length);
+        busy(true, tr('Creating file {i} of {n}', { i: i + 1, n: groups.length }), i / groups.length);
         const g = groups[i], out = await PDFDocument.create();
         (await out.copyPages(src, g)).forEach(p => out.addPage(p));
         const label = g.length === 1 ? `page-${g[0] + 1}` : (mode === 'extract' ? 'extracted' : `pages-${g[0] + 1}-${g[g.length - 1] + 1}`);
         const bytes = await out.save();
-        files.push({ name: `${nm}_${label}.pdf`, blob: pdfBlob(bytes), meta: `${g.length} page${g.length > 1 ? 's' : ''}` });
+        files.push({ name: `${nm}_${label}.pdf`, blob: pdfBlob(bytes), meta: trn(g.length, '{n} page', '{n} pages') });
       }
-      return { files, note: `${files.length} file${files.length > 1 ? 's' : ''} created from ${total} pages`, zipName: `${nm}_split.zip` };
+      return { files, note: trn(files.length, '{n} file created from {total} pages', '{n} files created from {total} pages', { total }), zipName: `${nm}_split.zip` };
     }
   },
 
   organize: {
-    opts: () => `<div class="info">Drag pages to reorder. Use ⟳ to rotate and 🗑 to delete a page.</div>
+    opts: () => `<div class="info">${tr('Drag pages to reorder. Use ⟳ to rotate and 🗑 to delete a page.')}</div>
       <div class="grid grid-cols-2 gap-2">
-        <button data-org="left" class="btn-ghost">${icon('rotateL', 'w-4 h-4')} Rotate all</button>
-        <button data-org="right" class="btn-ghost">${icon('rotate', 'w-4 h-4')} Rotate all</button>
-        <button data-org="reverse" class="btn-ghost">${icon('swap', 'w-4 h-4')} Reverse</button>
-        <button data-org="reset" class="btn-ghost">${icon('refresh', 'w-4 h-4')} Reset</button>
+        <button data-org="left" class="btn-ghost">${icon('rotateL', 'w-4 h-4')} ${tr('Rotate all')}</button>
+        <button data-org="right" class="btn-ghost">${icon('rotate', 'w-4 h-4')} ${tr('Rotate all')}</button>
+        <button data-org="reverse" class="btn-ghost">${icon('swap', 'w-4 h-4')} ${tr('Reverse')}</button>
+        <button data-org="reset" class="btn-ghost">${icon('refresh', 'w-4 h-4')} ${tr('Reset')}</button>
       </div>`,
     bind() {
       $('#opts').addEventListener('click', e => {
@@ -644,18 +813,18 @@ const IMPL = {
     async run() {
       const f = S.files[0];
       const src = await loadPdfLib(f.buf), out = await PDFDocument.create();
-      busy(true, 'Rebuilding document…', .4);
+      busy(true, tr('Rebuilding document…'), .4);
       const pages = await out.copyPages(src, S.pages.map(p => p.src));
       pages.forEach((pg, i) => { const r = norm(S.pages[i].rot); if (r) pg.setRotation(degrees(norm(pg.getRotation().angle + r))); out.addPage(pg); });
       const bytes = await out.save();
-      return { files: [{ name: `${base(f.name)}_organized.pdf`, blob: pdfBlob(bytes) }], note: `${S.pages.length} pages · ${fmt(bytes.length)}` };
+      return { files: [{ name: `${base(f.name)}_organized.pdf`, blob: pdfBlob(bytes) }], note: `${trn(S.pages.length, '{n} page', '{n} pages')} · ${fmt(bytes.length)}` };
     }
   },
 
   rotate: {
     opts: () => `${field('Rotation', seg('angle', [['90', '90° ↻'], ['180', '180°'], ['270', '90° ↺']], '90'))}
       ${field('Apply to', seg('which', [['all', 'All'], ['odd', 'Odd'], ['even', 'Even'], ['custom', 'Custom']], 'all'))}
-      <div id="customBox" class="hidden">${field('Pages', `<input id="rotPages" class="inp" placeholder="e.g. 1, 3-5">`)}</div>`,
+      <div id="customBox" class="hidden">${field('Pages', `<input id="rotPages" class="inp" placeholder="${tr('e.g. 1, 3-5')}">`)}</div>`,
     onOpt() {
       $('#customBox').classList.toggle('hidden', getSeg('which') !== 'custom');
       const im = $('#thumbImg'); if (im) im.style.transform = `rotate(${getSeg('angle')}deg) scale(${getSeg('angle') === '180' ? 1 : .72})`;
@@ -667,20 +836,20 @@ const IMPL = {
       const doc = await loadPdfLib(f.buf);
       doc.getPages().forEach((p, i) => { if (set.has(i)) p.setRotation(degrees(norm(p.getRotation().angle + ang))); });
       const bytes = await doc.save();
-      return { files: [{ name: `${base(f.name)}_rotated.pdf`, blob: pdfBlob(bytes) }], note: `${set.size} page${set.size > 1 ? 's' : ''} rotated ${ang === 270 ? '90° counter-clockwise' : ang + '°'}` };
+      return { files: [{ name: `${base(f.name)}_rotated.pdf`, blob: pdfBlob(bytes) }], note: trn(set.size, '{n} page rotated {a}', '{n} pages rotated {a}', { a: ang === 270 ? tr('90° counter-clockwise') : ang + '°' }) };
     }
   },
 
   compress: {
     LV: { low: { s: 2, q: .82 }, med: { s: 1.5, q: .68 }, high: { s: 1.15, q: .5 } },
     opts: () => `${field('Compression level', seg('level', [['low', 'Light'], ['med', 'Balanced'], ['high', 'Strong']], 'med'), 'Light keeps the best quality; Strong gives the smallest file.')}
-      <label class="flex items-center gap-3 text-sm cursor-pointer"><input id="gray" type="checkbox" class="chk"> Convert to grayscale</label>
-      <div class="info">Pages are re-rendered as optimized images. Great for scans and image-heavy PDFs; text will no longer be selectable.</div>`,
+      <label class="flex items-center gap-3 text-sm cursor-pointer"><input id="gray" type="checkbox" class="chk"> ${tr('Convert to grayscale')}</label>
+      <div class="info">${tr('Pages are re-rendered as optimized images. Great for scans and image-heavy PDFs; text will no longer be selectable.')}</div>`,
     async run() {
       const f = S.files[0], lv = this.LV[getSeg('level')], gray = $('#gray').checked;
       const out = await PDFDocument.create();
       for (let i = 1; i <= f.pageCount; i++) {
-        busy(true, `Compressing page ${i} of ${f.pageCount}`, (i - 1) / f.pageCount);
+        busy(true, tr('Compressing page {i} of {n}', { i, n: f.pageCount }), (i - 1) / f.pageCount);
         const c = await renderPage(f.pdf, i, { scale: lv.s });
         if (gray) { const ctx = c.getContext('2d'), d = ctx.getImageData(0, 0, c.width, c.height), a = d.data; for (let k = 0; k < a.length; k += 4) { const y = a[k] * .299 + a[k + 1] * .587 + a[k + 2] * .114; a[k] = a[k + 1] = a[k + 2] = y; } ctx.putImageData(d, 0, 0); }
         const jpg = await canvasBytes(c, 'image/jpeg', lv.q);
@@ -689,10 +858,10 @@ const IMPL = {
         pg.drawImage(img, { x: 0, y: 0, width: c.pw, height: c.ph });
         c.width = c.height = 0;
       }
-      busy(true, 'Saving…', .98);
+      busy(true, tr('Saving…'), .98);
       const bytes = await out.save();
       const saved = 1 - bytes.length / f.size;
-      const note = saved > 0.01 ? `${fmt(f.size)} → ${fmt(bytes.length)} · <b class="text-emerald-600">${Math.round(saved * 100)}% smaller</b>` : `Result is ${fmt(bytes.length)} — this PDF is already well optimized. Try "Strong" or grayscale.`;
+      const note = saved > 0.01 ? `${fmt(f.size)} → ${fmt(bytes.length)} · <b class="text-emerald-600">${tr('{p}% smaller', { p: Math.round(saved * 100) })}</b>` : esc(tr('Result is {size} — this PDF is already well optimized. Try "Strong" or grayscale.', { size: fmt(bytes.length) }));
       return { files: [{ name: `${base(f.name)}_compressed.pdf`, blob: pdfBlob(bytes) }], note, html: true };
     }
   },
@@ -707,7 +876,7 @@ const IMPL = {
       const doc = await PDFDocument.create();
       const size = getSeg('size'), orient = getSeg('orient'), m = +getSeg('margin');
       for (let i = 0; i < S.files.length; i++) {
-        const f = S.files[i]; busy(true, `Adding ${f.name}`, i / S.files.length);
+        const f = S.files[i]; busy(true, tr('Adding {name}', { name: f.name }), i / S.files.length);
         let im;
         if (f.type === 'image/png') { try { im = await doc.embedPng(new Uint8Array(await f.file.arrayBuffer())); } catch (er) { im = await doc.embedPng(await canvasBytes(this.toCanvas(f), 'image/png')); } }
         else im = await doc.embedJpg(await canvasBytes(this.toCanvas(f, true), 'image/jpeg', .92));
@@ -723,7 +892,7 @@ const IMPL = {
       }
       const bytes = await doc.save();
       const name = (($('#outName').value || 'images').trim().replace(/\.pdf$/i, '') || 'images') + '.pdf';
-      return { files: [{ name, blob: pdfBlob(bytes) }], note: `${S.files.length} image${S.files.length > 1 ? 's' : ''} · ${fmt(bytes.length)}` };
+      return { files: [{ name, blob: pdfBlob(bytes) }], note: `${trn(S.files.length, '{n} image', '{n} images')} · ${fmt(bytes.length)}` };
     },
     toCanvas(f, white) {
       const c = document.createElement('canvas'); c.width = f.w; c.height = f.h;
@@ -735,21 +904,21 @@ const IMPL = {
   'pdf-to-img': {
     opts: () => `${field('Image format', seg('fmt', [['png', 'PNG'], ['jpg', 'JPG']], 'png'))}
       ${field('Quality', seg('scale', [['1', 'Normal'], ['2', 'High'], ['3', 'Ultra']], '2'), 'Higher quality = larger images (Normal ≈ 72 DPI, High ≈ 144, Ultra ≈ 216).')}
-      ${field('Pages', `<input id="imgPages" class="inp" placeholder="All pages (or e.g. 1-3, 6)">`)}`,
+      ${field('Pages', `<input id="imgPages" class="inp" placeholder="${tr('All pages (or e.g. 1-3, 6)')}">`)}`,
     async run() {
       const f = S.files[0], ext = getSeg('fmt'), sc = +getSeg('scale');
       const txt = $('#imgPages').value.trim();
       const idx = txt ? [...new Set(parseRanges(txt, f.pageCount).flat())] : [...Array(f.pageCount).keys()];
       const files = [];
       for (let k = 0; k < idx.length; k++) {
-        busy(true, `Rendering page ${idx[k] + 1}`, k / idx.length);
+        busy(true, tr('Rendering page {n}', { n: idx[k] + 1 }), k / idx.length);
         const c = await renderPage(f.pdf, idx[k] + 1, { scale: sc, white: ext === 'jpg' });
         const blob = await canvasBlob(c, ext === 'png' ? 'image/png' : 'image/jpeg', .92);
         const url = URL.createObjectURL(blob); S.urls.push(url);
         files.push({ name: `${base(f.name)}_page-${idx[k] + 1}.${ext}`, blob, preview: url, meta: `${c.width}×${c.height}` });
         c.width = c.height = 0;
       }
-      return { files, note: `${files.length} image${files.length > 1 ? 's' : ''} created`, zipName: `${base(f.name)}_images.zip`, gallery: true };
+      return { files, note: trn(files.length, '{n} image created', '{n} images created'), zipName: `${base(f.name)}_images.zip`, gallery: true };
     }
   },
 
@@ -773,20 +942,20 @@ const IMPL = {
     afterRender() { const im = $('#thumbImg'); if (im) { im.complete ? this.onOpt() : im.addEventListener('load', () => this.onOpt(), { once: true }); } },
     async run() {
       const f = S.files[0], v = this.vals();
-      if (!v.text.trim()) throw new Error('Enter some watermark text');
+      if (!v.text.trim()) throw new Error(tr('Enter some watermark text'));
       const doc = await loadPdfLib(f.buf);
       const c = await textCanvas(v.text, v.size * 4, v.color);
       const im = await doc.embedPng(await canvasBytes(c, 'image/png'));
       const w = c.width / 4, h = c.height / 4, r = v.rot * Math.PI / 180, cos = Math.cos(r), sin = Math.sin(r);
       const pages = doc.getPages();
       pages.forEach((page, i) => {
-        if (i % 20 === 0) busy(true, `Stamping page ${i + 1}`, i / pages.length);
+        if (i % 20 === 0) busy(true, tr('Stamping page {n}', { n: i + 1 }), i / pages.length);
         const { width: pw, height: ph } = page.getSize();
         const pts = v.layout === 'center' ? [[pw / 2, ph / 2]] : tileCenters(pw, ph, w, h, v.size);
         for (const [cx, cy] of pts) page.drawImage(im, { x: cx - (w / 2) * cos + (h / 2) * sin, y: cy - (w / 2) * sin - (h / 2) * cos, width: w, height: h, rotate: degrees(v.rot), opacity: v.op });
       });
       const bytes = await doc.save();
-      return { files: [{ name: `${base(f.name)}_watermarked.pdf`, blob: pdfBlob(bytes) }], note: `Watermark added to ${pages.length} pages` };
+      return { files: [{ name: `${base(f.name)}_watermarked.pdf`, blob: pdfBlob(bytes) }], note: trn(pages.length, 'Watermark added to {n} page', 'Watermark added to {n} pages') };
     }
   },
 
@@ -798,14 +967,14 @@ const IMPL = {
       <div class="grid grid-cols-2 gap-3">${field('Start at', `<input id="pnStart" type="number" min="0" value="1" class="inp">`)}${field('Color', `<input id="pnColor" type="color" value="#374151" class="swatch !w-full">`)}</div>
       ${field('Font size', slider('pnSize', 7, 28, 11, 'pt'))}
       ${field('Margin', slider('pnMargin', 8, 72, 28, 'pt'))}
-      <label class="flex items-center gap-3 text-sm cursor-pointer"><input id="pnSkip" type="checkbox" class="chk"> Skip first page (cover)</label>`;
+      <label class="flex items-center gap-3 text-sm cursor-pointer"><input id="pnSkip" type="checkbox" class="chk"> ${tr('Skip first page (cover)')}</label>`;
     },
     vals: () => ({ pos: getSeg('pos'), fmt: $('#pnFmt').value, start: parseInt($('#pnStart').value, 10) || 0, color: $('#pnColor').value, size: +$('#pnSize').value, m: +$('#pnMargin').value, skip: $('#pnSkip').checked }),
     label(v, i, total) { return v.fmt.replace('{n}', v.start + i).replace('{total}', total + v.start - 1); },
     onOpt() {
       const ov = $('#ov'), f = S.files[0]; if (!ov || !f) return;
       const v = this.vals(), s = ov.clientWidth / f.pw;
-      if (v.skip) { ov.innerHTML = '<span class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] bg-slate-800/80 text-white px-2 py-0.5 rounded-full">Cover — no number</span>'; return; }
+      if (v.skip) { ov.innerHTML = `<span class="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] bg-slate-800/80 text-white px-2 py-0.5 rounded-full">${tr('Cover — no number')}</span>`; return; }
       const vert = v.pos[0] === 't' ? `top:${v.m * s}px` : `bottom:${v.m * s}px`;
       const hor = { l: `left:${v.m * s}px`, r: `right:${v.m * s}px`, c: 'left:50%;transform:translateX(-50%)' }[v.pos[1]];
       ov.innerHTML = `<span style="position:absolute;${vert};${hor};font:${Math.max(5, v.size * s)}px Helvetica,Arial,sans-serif;line-height:1;color:${v.color};white-space:nowrap">${esc(this.label(v, 0, f.pageCount - (v.skip ? 1 : 0)))}</span>`;
@@ -825,30 +994,30 @@ const IMPL = {
         page.drawText(txt, { x, y, size: v.size, font, color });
       });
       const bytes = await doc.save();
-      return { files: [{ name: `${base(f.name)}_numbered.pdf`, blob: pdfBlob(bytes) }], note: `Numbers added to ${total} pages` };
+      return { files: [{ name: `${base(f.name)}_numbered.pdf`, blob: pdfBlob(bytes) }], note: trn(total, 'Numbers added to {n} page', 'Numbers added to {n} pages') };
     }
   },
 
   'extract-text': {
     opts: () => `${field('Page separators', seg('sep', [['yes', 'Show'], ['no', 'Hide']], 'yes'))}
-      <div class="info">Works with PDFs that contain real text. Scanned documents (images of text) won't produce output.</div>`,
+      <div class="info">${tr("Works with PDFs that contain real text. Scanned documents (images of text) won't produce output.")}</div>`,
     async run() {
       const f = S.files[0], sep = getSeg('sep') === 'yes', parts = [];
       for (let i = 1; i <= f.pageCount; i++) {
-        busy(true, `Reading page ${i} of ${f.pageCount}`, (i - 1) / f.pageCount);
+        busy(true, tr('Reading page {i} of {n}', { i, n: f.pageCount }), (i - 1) / f.pageCount);
         const page = await f.pdf.getPage(i), tc = await page.getTextContent();
         const t = tc.items.map(it => (it.str || '') + (it.hasEOL ? '\n' : '')).join('').replace(/[ \t]+\n/g, '\n').trim();
         parts.push(sep ? `──────── Page ${i} ────────\n\n${t}` : t);
       }
       const text = parts.join('\n\n');
       const has = parts.some(p => p.replace(/─+ Page \d+ ─+/g, '').trim());
-      return { files: [{ name: `${base(f.name)}.txt`, blob: new Blob([text], { type: 'text/plain;charset=utf-8' }) }], text, note: has ? `${text.length.toLocaleString()} characters from ${f.pageCount} pages` : 'No selectable text found — this PDF may be scanned images.' };
+      return { files: [{ name: `${base(f.name)}.txt`, blob: new Blob([text], { type: 'text/plain;charset=utf-8' }) }], text, note: has ? trn(f.pageCount, '{c} characters from {n} page', '{c} characters from {n} pages', { c: text.length.toLocaleString() }) : tr('No selectable text found — this PDF may be scanned images.') };
     }
   },
 
   metadata: {
     KEYS: [['Title', 'Title'], ['Author', 'Author'], ['Subject', 'Subject'], ['Keywords', 'Keywords'], ['Creator', 'Creator'], ['Producer', 'Producer']],
-    opts() { return this.KEYS.map(([k, l]) => field(l, `<input id="md${k}" class="inp" placeholder="${k === 'Keywords' ? 'comma, separated, words' : '—'}" disabled>`)).join(''); },
+    opts() { return this.KEYS.map(([k, l]) => field(l, `<input id="md${k}" class="inp" placeholder="${k === 'Keywords' ? tr('comma, separated, words') : '—'}" disabled>`)).join(''); },
     async onLoad() {
       const doc = await PDFDocument.load(S.files[0].buf, { ignoreEncryption: true, updateMetadata: false });
       this.KEYS.forEach(([k]) => { const el = $('#md' + k); if (!el) return; el.disabled = false; el.value = doc['get' + k]() || ''; });
@@ -860,7 +1029,7 @@ const IMPL = {
       doc.setKeywords(g('Keywords').split(',').map(s => s.trim()).filter(Boolean));
       doc.setCreator(g('Creator')); doc.setProducer(g('Producer')); doc.setModificationDate(new Date());
       const bytes = await doc.save();
-      return { files: [{ name: f.name.replace(/\.pdf$/i, '') + '.pdf', blob: pdfBlob(bytes) }], note: 'Metadata updated' };
+      return { files: [{ name: f.name.replace(/\.pdf$/i, '') + '.pdf', blob: pdfBlob(bytes) }], note: tr('Metadata updated') };
     }
   },
 };
@@ -870,31 +1039,31 @@ async function run() {
   const impl = IMPL[T.id];
   const btn = $('#runBtn'); btn.disabled = true;
   try {
-    busy(true, 'Processing…', 0);
+    busy(true, tr('Processing…'), 0);
     await sleep(30);
     const out = await impl.run();
     busy(false);
     if (out) showResults(out);
-  } catch (e) { busy(false); console.error(e); toast(e.message || 'Something went wrong', 'error'); }
+  } catch (e) { busy(false); console.error(e); toast(e.message || tr('Something went wrong'), 'error'); }
   finally { updateRun(); }
 }
 
-function showResults(out) {
+function showResults(out, quiet) {
   S.results = out;
   const n = out.files.length;
   const r = $('#results');
   const note = out.html ? out.note : esc(out.note || '');
   r.innerHTML = `
-  <div class="glass rounded-3xl p-5 sm:p-7 fade-in" style="box-shadow:0 20px 60px -20px rgba(16,185,129,.25), inset 0 1px 0 #fff">
+  <div class="glass rounded-3xl p-5 sm:p-7 fade-in" style="box-shadow:0 20px 60px -20px rgba(16,185,129,.25)">
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-4 min-w-0">
         <div class="icon-bubble w-12 h-12 shrink-0 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 grid place-items-center text-white" style="--glow:rgba(16,185,129,.6)">${icon('check', 'w-6 h-6')}</div>
-        <div class="min-w-0"><h3 class="font-display font-semibold text-lg">Done! ${n > 1 ? `${n} files are` : 'Your file is'} ready</h3><p class="text-sm text-slate-500">${note}</p></div>
+        <div class="min-w-0"><h3 class="font-display font-semibold text-lg">${n > 1 ? tr('Done! {n} files are ready', { n }) : tr('Done! Your file is ready')}</h3><p class="text-sm text-slate-500">${note}</p></div>
       </div>
       <div class="flex flex-wrap gap-2">
-        ${n > 1 ? `<button data-zip class="btn-primary">${icon('download', 'w-4 h-4')} Download all (.zip)</button>` : `<button data-dl="0" class="btn-primary">${icon('download', 'w-4 h-4')} Download ${esc(out.files[0].name.split('.').pop().toUpperCase())}</button>`}
-        <button data-wa class="btn-wa">${WA_SVG('w-5 h-5')} Send on WhatsApp</button>
-        ${out.text != null ? `<button data-copy class="btn-ghost !py-3">${icon('copy', 'w-4 h-4')} Copy text</button>` : ''}
+        ${n > 1 ? `<button data-zip class="btn-primary">${icon('download', 'w-4 h-4')} ${tr('Download all (.zip)')}</button>` : `<button data-dl="0" class="btn-primary">${icon('download', 'w-4 h-4')} ${tr('Download {ext}', { ext: esc(out.files[0].name.split('.').pop().toUpperCase()) })}</button>`}
+        <button data-wa class="btn-wa">${WA_SVG('w-5 h-5')} ${tr('Send on WhatsApp')}</button>
+        ${out.text != null ? `<button data-copy class="btn-ghost !py-3">${icon('copy', 'w-4 h-4')} ${tr('Copy text')}</button>` : ''}
       </div>
     </div>
     ${out.text != null ? `<textarea readonly class="inp mt-5 h-80 font-mono text-xs leading-relaxed resize-y">${esc(out.text)}</textarea>` : ''}
@@ -903,16 +1072,16 @@ function showResults(out) {
         <div class="glass-soft rounded-2xl p-2 group">
           <div class="aspect-[3/4] rounded-xl bg-slate-100/80 grid place-items-center overflow-hidden"><img src="${f.preview}" loading="lazy" class="max-w-[90%] max-h-[90%] object-contain rounded-sm shadow-lg"></div>
           <div class="flex items-center justify-between gap-2 mt-2 px-1"><div class="min-w-0"><p class="text-xs font-medium truncate">${esc(f.name)}</p><p class="text-[11px] text-slate-400">${f.meta} · ${fmt(f.blob.size)}</p></div>
-          <button data-dl="${i}" class="mini-btn shrink-0" title="Download">${icon('download', 'w-3.5 h-3.5')}</button></div>
+          <button data-dl="${i}" class="mini-btn shrink-0" title="${tr('Download')}">${icon('download', 'w-3.5 h-3.5')}</button></div>
         </div>` : `
         <div class="glass-soft rounded-2xl p-3 flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 grid place-items-center text-white shrink-0">${icon('file', 'w-5 h-5')}</div>
           <div class="min-w-0 flex-1"><p class="text-sm font-medium truncate">${esc(f.name)}</p><p class="text-[11px] text-slate-400">${f.meta ? f.meta + ' · ' : ''}${fmt(f.blob.size)}</p></div>
-          <button data-dl="${i}" class="mini-btn !w-9 !h-9 shrink-0" title="Download">${icon('download', 'w-4 h-4')}</button>
+          <button data-dl="${i}" class="mini-btn !w-9 !h-9 shrink-0" title="${tr('Download')}">${icon('download', 'w-4 h-4')}</button>
         </div>`).join('')}
     </div>` : ''}
   </div>`;
-  setTimeout(() => r.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+  if (!quiet) setTimeout(() => r.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
 }
 
 async function onResultsClick(e) {
@@ -920,13 +1089,13 @@ async function onResultsClick(e) {
   const dl = e.target.closest('[data-dl]');
   if (dl) { const f = out.files[+dl.dataset.dl]; return saveFile(f.name, f.blob); }
   if (e.target.closest('[data-zip]')) {
-    try { const z = await outputFile(out); await saveFile(z.name, z.blob); } catch (er) { toast('Could not create ZIP', 'error'); }
+    try { const z = await outputFile(out); await saveFile(z.name, z.blob); } catch (er) { toast(tr('Could not create ZIP'), 'error'); }
     return;
   }
   if (e.target.closest('[data-wa]')) return shareWhatsApp(out);
   if (e.target.closest('[data-copy]')) {
-    try { await navigator.clipboard.writeText(out.text); toast('Text copied to clipboard', 'success'); }
-    catch (er) { const ta = $('#results textarea'); ta.focus(); ta.select(); toast('Press Ctrl+C to copy the selected text'); }
+    try { await navigator.clipboard.writeText(out.text); toast(tr('Text copied to clipboard'), 'success'); }
+    catch (er) { const ta = $('#results textarea'); ta.focus(); ta.select(); toast(tr('Press Ctrl+C to copy the selected text')); }
   }
 }
 
@@ -935,10 +1104,10 @@ async function onResultsClick(e) {
 async function outputFile(out) {
   if (out.files.length === 1) return out.files[0];
   if (out._zip) return out._zip;
-  busy(true, 'Packing ZIP…', 0);
+  busy(true, tr('Packing ZIP…'), 0);
   try {
     const zip = new JSZip(); out.files.forEach(f => zip.file(f.name, f.blob));
-    const blob = await zip.generateAsync({ type: 'blob' }, m => busy(true, 'Packing ZIP…', m.percent / 100));
+    const blob = await zip.generateAsync({ type: 'blob' }, m => busy(true, tr('Packing ZIP…'), m.percent / 100));
     return (out._zip = { name: out.zipName || 'files.zip', blob });
   } finally { busy(false); }
 }
@@ -946,13 +1115,13 @@ const MIME = { pdf: 'application/pdf', png: 'image/png', jpg: 'image/jpeg', zip:
 
 async function shareWhatsApp(out) {
   let f;
-  try { f = await outputFile(out); } catch (e) { return toast('Could not prepare the file', 'error'); }
+  try { f = await outputFile(out); } catch (e) { return toast(tr('Could not prepare the file'), 'error'); }
   // 1) Phones & supported browsers: share the actual file straight into WhatsApp.
   try {
     const file = new File([f.blob], f.name, { type: MIME[f.name.split('.').pop()] || f.blob.type });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({ files: [file], title: f.name, text: `📄 ${f.name}` });
-      return toast('Shared! Pick WhatsApp from the share menu', 'success');
+      return toast(tr('Shared! Pick WhatsApp from the share menu'), 'success');
     }
   } catch (e) { if (e && e.name === 'AbortError') return; }
   // 2) Desktop / fallback: download the file, then open WhatsApp to attach it.
@@ -966,27 +1135,27 @@ function openWaModal(f) {
   m.className = 'fixed inset-0 z-[70] grid place-items-center p-4 bg-slate-900/30 backdrop-blur-sm fade-in';
   m.innerHTML = `
   <div class="glass rounded-3xl p-6 sm:p-7 w-full max-w-md relative">
-    <button data-close class="mini-btn absolute top-4 right-4" title="Close">${icon('x', 'w-4 h-4')}</button>
+    <button data-close class="mini-btn absolute top-4 right-4" title="${tr('Close')}">${icon('x', 'w-4 h-4')}</button>
     <div class="flex items-center gap-3">
       <div class="icon-bubble w-12 h-12 rounded-2xl bg-gradient-to-br from-[#25D366] to-[#128C7E] grid place-items-center text-white" style="--glow:rgba(37,211,102,.55)">${WA_SVG('w-6 h-6')}</div>
-      <div><h3 class="font-display font-semibold text-lg text-slate-900">Send on WhatsApp</h3><p class="text-xs text-slate-500 truncate max-w-[16rem]">${esc(f.name)} · ${fmt(f.blob.size)}</p></div>
+      <div><h3 class="font-display font-semibold text-lg text-slate-900">${tr('Send on WhatsApp')}</h3><p class="text-xs text-slate-500 truncate max-w-[16rem]">${esc(f.name)} · ${fmt(f.blob.size)}</p></div>
     </div>
     <div class="mt-6 space-y-4">
       <div class="flex gap-3">
         <span class="step">1</span>
-        <div class="flex-1"><p class="text-sm font-medium text-slate-800">Save the file to your device</p>
-          <button data-wadl class="btn-ghost mt-2">${icon('download', 'w-4 h-4')} Download file</button></div>
+        <div class="flex-1"><p class="text-sm font-medium text-slate-800">${tr('Save the file to your device')}</p>
+          <button data-wadl class="btn-ghost mt-2">${icon('download', 'w-4 h-4')} ${tr('Download file')}</button></div>
       </div>
       <div class="flex gap-3">
         <span class="step">2</span>
-        <div class="flex-1"><p class="text-sm font-medium text-slate-800">Open WhatsApp and attach it</p>
-          <input id="waPhone" class="inp mt-2" inputmode="tel" placeholder="Phone with country code (optional) e.g. 8801XXXXXXXXX">
-          <textarea id="waMsg" class="inp mt-2 h-20 resize-none">📄 Sending you "${esc(f.name)}"</textarea>
-          <a id="waLink" href="#" target="_blank" rel="noopener" class="btn-wa w-full mt-3">${WA_SVG('w-5 h-5')} Open WhatsApp ${icon('external', 'w-4 h-4')}</a>
+        <div class="flex-1"><p class="text-sm font-medium text-slate-800">${tr('Open WhatsApp and attach it')}</p>
+          <input id="waPhone" class="inp mt-2" inputmode="tel" placeholder="${tr('Phone with country code (optional) e.g. 8801XXXXXXXXX')}">
+          <textarea id="waMsg" class="inp mt-2 h-20 resize-none">${esc(tr('📄 Sending you "{name}"', { name: f.name }))}</textarea>
+          <a id="waLink" href="#" target="_blank" rel="noopener" class="btn-wa w-full mt-3">${WA_SVG('w-5 h-5')} ${tr('Open WhatsApp')} ${icon('external', 'w-4 h-4')}</a>
         </div>
       </div>
     </div>
-    <p class="text-[11px] text-slate-400 mt-5 leading-relaxed">WhatsApp links can't carry files, so attach the downloaded file (📎) in the chat. On phones, the button shares the file directly.</p>
+    <p class="text-[11px] text-slate-400 mt-5 leading-relaxed">${tr("WhatsApp links can't carry files, so attach the downloaded file (📎) in the chat. On phones, the button shares the file directly.")}</p>
   </div>`;
   document.body.appendChild(m);
   const upd = () => {
@@ -1003,5 +1172,6 @@ function openWaModal(f) {
   document.addEventListener('keydown', function k(e) { if (e.key === 'Escape') { m.remove(); document.removeEventListener('keydown', k); } });
 }
 
+applyChrome();
 route();
 })();

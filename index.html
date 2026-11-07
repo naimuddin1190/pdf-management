@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PDF Studio — Merge, Split &amp; Edit PDFs</title>
+<script>
+  /* Apply saved theme / language before first paint (no flash) */
+  (function () {
+    var th = null, lg = null;
+    try { th = localStorage.getItem('pdfstudio-theme'); lg = localStorage.getItem('pdfstudio-lang'); } catch (e) {}
+    if (th !== 'dark' && th !== 'light') th = (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+    document.documentElement.classList.toggle('dark', th === 'dark');
+    document.documentElement.lang = lg === 'bn' ? 'bn' : 'en';
+  })();
+</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   if (window.tailwind) tailwind.config = { theme: { extend: { fontFamily: {
@@ -142,6 +152,82 @@
   ::-webkit-scrollbar-thumb { background: #d9d4ee; border-radius: 99px; border: 2px solid #f6f5fb; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::selection { background: rgba(217,70,239,.2); }
+  /* ---------- Header toggles ---------- */
+  .nav-btn { height: 36px; min-width: 36px; padding: 0 .8rem; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: .35rem;
+    font-size: .8rem; font-weight: 600; color: #3f3b57; background: #fff; border: 1px solid #e6e3f1; box-shadow: 0 1px 2px rgba(30,27,75,.06); transition: all .2s; white-space: nowrap; }
+  .nav-btn.icon-only { padding: 0; width: 36px; }
+  .nav-btn:hover { color: #6d28d9; border-color: #d8ccfb; background: #faf8ff; transform: translateY(-1px); }
+  .nav-btn:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(139,92,246,.3); }
+  html[lang="bn"] .nav-btn#langBtn { font-family: Inter, sans-serif; }
+  html[lang="en"] .nav-btn#langBtn { font-family: 'Hind Siliguri', sans-serif; }
+
+  /* ================= Night mode ================= */
+  html.dark { color-scheme: dark; }
+  html.dark, html.dark body { background: #0f0d1a; color: #e7e5f4; }
+  .dark .orb.o1 { background: #4c1d95; opacity: .45; }
+  .dark .orb.o2 { background: #831843; opacity: .32; }
+  .dark .orb.o3 { background: #0c4a6e; opacity: .4; }
+  .dark .grid-bg { background-image: linear-gradient(rgba(167,139,250,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,.07) 1px, transparent 1px); }
+  .dark .glass { background: linear-gradient(150deg, rgba(32,29,50,.8), rgba(22,20,36,.62)); border-color: rgba(255,255,255,.08);
+    box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 36px -14px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.06); }
+  .dark .glass::before { background: linear-gradient(180deg, rgba(255,255,255,.05), transparent 40%); }
+  .dark .glass-soft { background: rgba(32,29,50,.72); border-color: #2c2840; box-shadow: none; }
+  .dark .tool-card:hover { border-color: rgba(255,255,255,.14); box-shadow: 0 26px 50px -20px var(--glow, rgba(139,92,246,.45)), inset 0 1px 0 rgba(255,255,255,.06); }
+  .dark .sheen { background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.08) 50%, transparent 70%); }
+  .dark .btn-ghost, .dark .mini-btn, .dark .nav-btn { color: #d4d1e6; background: #1d1a2c; border-color: #332e48; box-shadow: none; }
+  .dark .btn-ghost:hover, .dark .mini-btn:hover, .dark .nav-btn:hover { color: #c4b5fd; border-color: #5b4a9a; background: #261f3c; }
+  .dark .inp { background: #17152a; border-color: #332e48; color: #ece9f8; box-shadow: none; }
+  .dark .inp::placeholder { color: #6f6a88; }
+  .dark .inp:disabled { background: #141224; }
+  .dark input[type=color].swatch { background: #17152a; border-color: #332e48; }
+  .dark input[type=range] { background: linear-gradient(90deg, #4c1d95, #831843); }
+  .dark input[type=range]::-webkit-slider-thumb { background: #1d1a2c; }
+  .dark input[type=range]::-moz-range-thumb { background: #1d1a2c; }
+  .dark .seg { background: #17152a; border-color: #2c2840; }
+  .dark .seg span { color: #9c97b5; }
+  .dark .seg span:hover { color: #ece9f8; }
+  .dark .seg input:checked + span { color: #ddd6fe; background: #2a2342; box-shadow: 0 0 0 1px rgba(167,139,250,.3); }
+  .dark .chk, .dark .check { border-color: #4a4462; background: #17152a; }
+  .dark .info { color: #ddd6fe; background: rgba(124,58,237,.14); border-color: rgba(167,139,250,.22); }
+  .dark .dropzone { border-color: #3a3454; background: radial-gradient(ellipse at center, rgba(76,29,149,.25), rgba(15,13,26,.2) 70%); }
+  .dark .dropzone:hover { border-color: #8b5cf6; }
+  .dark #work.drag-on .dropzone { background: rgba(76,29,149,.35); }
+  .dark .item-card:hover { border-color: #5b4a9a; box-shadow: 0 16px 30px -18px rgba(0,0,0,.6); }
+  .dark .item-card.selected { border-color: #8b5cf6; background: rgba(124,58,237,.18); }
+  .dark .spinner { border-color: #2c2840; border-top-color: #d946ef; border-right-color: #8b5cf6; }
+  .dark ::-webkit-scrollbar-thumb { background: #332e48; border-color: #0f0d1a; }
+  /* Tailwind colour utilities used in the markup */
+  .dark .text-slate-900 { color: #f4f2fb; }
+  .dark .text-slate-800 { color: #e7e5f4; }
+  .dark .text-slate-700 { color: #d4d1e6; }
+  .dark .text-slate-600, .dark .\!text-slate-600 { color: #b4b0cb !important; }
+  .dark .text-slate-600\/80 { color: rgba(180,176,203,.85); }
+  .dark .text-slate-500 { color: #9893b3; }
+  .dark .text-slate-400 { color: #77728f; }
+  .dark .hover\:text-slate-900:hover { color: #fff; }
+  .dark .text-violet-700 { color: #c4b5fd; }
+  .dark .text-violet-600 { color: #a78bfa; }
+  .dark .text-emerald-700 { color: #6ee7b7; }
+  .dark .text-emerald-600 { color: #34d399; }
+  .dark .bg-emerald-50 { background-color: rgba(16,185,129,.12); }
+  .dark .border-emerald-200 { border-color: rgba(16,185,129,.3); }
+  .dark .bg-white { background-color: #1d1a2c; }
+  .dark .bg-white\/90, .dark .\!bg-white\/90 { background-color: rgba(29,26,44,.9) !important; }
+  .dark .bg-white\/40 { background-color: rgba(15,13,26,.55); }
+  .dark .bg-slate-100\/80 { background-color: rgba(255,255,255,.04); }
+  .dark .bg-violet-100 { background-color: #2a2342; }
+  .dark .bg-slate-900\/5, .dark .hover\:bg-slate-900\/5:hover { background-color: rgba(255,255,255,.07); }
+  .dark .bg-slate-900\/30 { background-color: rgba(0,0,0,.55); }
+  .dark .hover\:bg-violet-50:hover { background-color: rgba(124,58,237,.12); }
+  .dark .border-slate-200 { border-color: #332e48; }
+  .dark .border-slate-300 { border-color: #3a3454; }
+  .dark .ring-slate-200 { --tw-ring-color: #332e48; }
+  .dark .hover\:\!bg-rose-500:hover { background-color: #f43f5e !important; }
+  .dark .hover\:\!text-white:hover { color: #fff !important; }
+  .dark .hover\:\!text-rose-600:hover { color: #fb7185 !important; }
+  .dark .hover\:\!border-rose-200:hover { border-color: rgba(244,63,94,.45) !important; }
+  .dark .group:hover .group-hover\:bg-violet-500 { background-color: #8b5cf6; }
+  .dark .group:hover .group-hover\:text-white { color: #fff; }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 </style>
 </head>
@@ -159,16 +245,20 @@
           <span>PDF<span class="text-gradient">Studio</span></span>
         </a>
         <div id="navLinks" class="hidden md:flex items-center gap-1 text-sm font-medium"></div>
-        <span class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#34d399]"></span> Free · Private
-        </span>
+        <div class="flex items-center gap-2">
+          <span class="hidden lg:inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#34d399]"></span> <span data-i18n="Free · Private">Free · Private</span>
+          </span>
+          <button id="langBtn" type="button" class="nav-btn">বাংলা</button>
+          <button id="themeBtn" type="button" class="nav-btn icon-only"></button>
+        </div>
       </nav>
     </div>
   </header>
 
   <main id="app" class="relative z-10"></main>
 
-  <footer class="relative z-10 text-center text-xs text-slate-400 pb-10 px-4">
+  <footer class="relative z-10 text-center text-xs text-slate-400 pb-10 px-4" data-i18n="PDF Studio · Everything runs locally in your browser — your files are never uploaded.">
     PDF Studio · Everything runs locally in your browser — your files are never uploaded.
   </footer>
 

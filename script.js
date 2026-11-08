@@ -217,6 +217,8 @@ const CATS = [['all', 'All'], ['organize', 'Organize'], ['edit', 'Edit'], ['conv
 const SHEETS = { a4: [595.28, 841.89], letter: [612, 792], legal: [612, 1008], a3: [841.89, 1190.55], a5: [419.53, 595.28] };
 
 Object.assign(BN, {
+  'Chat with developer': 'ডেভেলপারের সাথে চ্যাট', 'Message the developer on WhatsApp': 'WhatsApp-এ ডেভেলপারকে মেসেজ দিন',
+  'Need help or have a suggestion?': 'সাহায্য লাগবে বা কোনো পরামর্শ আছে?', 'Hi! I am messaging you from PDF Studio.': 'হ্যালো! আমি PDF Studio থেকে আপনাকে মেসেজ দিচ্ছি।',
   'Organize': 'সাজানো', 'Edit': 'এডিট', 'Convert': 'কনভার্ট', 'Optimize': 'অপ্টিমাইজ', 'New': 'নতুন', 'Recently used': 'সম্প্রতি ব্যবহৃত',
   'Menu': 'মেনু', 'Shortcut: Ctrl + Enter': 'শর্টকাট: Ctrl + Enter', 'Previous page': 'আগের পেজ', 'Next page': 'পরের পেজ', 'Page {n} of {total}': 'পেজ {n} / {total}',
   'Tip: drag cards to reorder (press and hold on touch screens), or use the arrows.': 'টিপ: কার্ড টেনে ক্রম বদলান (টাচ স্ক্রিনে চেপে ধরে টানুন), অথবা তীর চিহ্ন ব্যবহার করুন।',
@@ -392,8 +394,17 @@ function applyChrome() {
   const lb = $('#langBtn');
   lb.textContent = LANG === 'bn' ? 'English' : 'বাংলা';
   lb.title = tr('Switch language'); lb.setAttribute('aria-label', lb.title);
+  // "Contact the developer" WhatsApp links (floating button + footer), with a ready-made greeting.
+  const waHref = `https://wa.me/${DEV_WA}?text=${encodeURIComponent(tr('Hi! I am messaging you from PDF Studio.'))}`;
+  $$('.wa-contact').forEach(a => { a.href = waHref; });
+  const fab = $('#waFab'), fabLabel = tr('Message the developer on WhatsApp');
+  fab.title = fabLabel; fab.setAttribute('aria-label', fabLabel);
   renderNav(); updateThemeBtn();
 }
+const DEV_WA = '8801833515057'; // 01833515057 in international format (Bangladesh +880)
+$('#waFab .wa-ico').innerHTML = WA_SVG('w-7 h-7');
+// On desktop, show the "Chat with developer" label briefly on first load so people notice it.
+setTimeout(() => { const l = $('#waFab .wa-label'); l.classList.add('intro'); setTimeout(() => l.classList.remove('intro'), 4500); }, 1200);
 $('#langBtn').addEventListener('click', () => {
   LANG = LANG === 'bn' ? 'en' : 'bn';
   LS.set('pdfstudio-lang', LANG);

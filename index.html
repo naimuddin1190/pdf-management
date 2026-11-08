@@ -274,6 +274,26 @@
   .item-card.dragging { position: relative; z-index: 40; opacity: .96; pointer-events: none; transition: none !important;
     box-shadow: 0 28px 50px -14px rgba(76,29,149,.5); border-color: #a78bfa; }
 
+  /* ---------- Floating "contact developer" WhatsApp button ---------- */
+  .wa-fab { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); z-index: 60;
+    display: flex; align-items: center; gap: .6rem; height: 56px; padding: 0 14px; border-radius: 999px; color: #fff;
+    background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 14px 30px -10px rgba(18,140,126,.75), inset 0 1px 0 rgba(255,255,255,.35);
+    transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .3s; -webkit-tap-highlight-color: transparent; }
+  .wa-fab::before { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 0 0 rgba(37,211,102,.55); animation: waPulse 2.4s ease-out infinite; pointer-events: none; }
+  @keyframes waPulse { 0% { box-shadow: 0 0 0 0 rgba(37,211,102,.5); } 70%, 100% { box-shadow: 0 0 0 16px rgba(37,211,102,0); } }
+  .wa-fab:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 18px 36px -10px rgba(18,140,126,.85), inset 0 1px 0 rgba(255,255,255,.4); }
+  .wa-fab:active { transform: scale(.96); }
+  .wa-fab:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(37,211,102,.4); }
+  .wa-fab .wa-ico { width: 28px; height: 28px; display: grid; place-items: center; flex-shrink: 0; }
+  .wa-fab .wa-label { font-size: .85rem; font-weight: 600; white-space: nowrap; max-width: 0; overflow: hidden; opacity: 0;
+    transition: max-width .35s cubic-bezier(.2,.8,.2,1), opacity .25s, margin .35s; margin-right: -.6rem; }
+  .wa-fab:hover .wa-label, .wa-fab:focus-visible .wa-label { max-width: 220px; opacity: 1; margin-right: .2rem; }
+  @media (min-width: 1024px) { .wa-fab .wa-label.intro { max-width: 220px; opacity: 1; margin-right: .2rem; } }
+  #toasts { bottom: 88px !important; }
+  footer .dev-link { display: inline-flex; align-items: center; gap: .35rem; font-weight: 600; color: #128C7E; }
+  footer .dev-link:hover { text-decoration: underline; }
+  .dark footer .dev-link { color: #4ade80; }
+
   /* ---------- Small screens ---------- */
   @media (max-width: 639px) {
     .res-actions > * { flex: 1 1 100%; }
@@ -311,9 +331,16 @@
 
   <main id="app" class="relative z-10"></main>
 
-  <footer class="relative z-10 text-center text-xs text-slate-400 pb-10 px-4" data-i18n="PDF Studio · Everything runs locally in your browser — your files are never uploaded.">
-    PDF Studio · Everything runs locally in your browser — your files are never uploaded.
+  <footer class="relative z-10 text-center text-xs text-slate-400 pb-24 sm:pb-10 px-4 space-y-2">
+    <p data-i18n="PDF Studio · Everything runs locally in your browser — your files are never uploaded.">PDF Studio · Everything runs locally in your browser — your files are never uploaded.</p>
+    <p><span data-i18n="Need help or have a suggestion?">Need help or have a suggestion?</span>
+      <a class="dev-link wa-contact" href="https://wa.me/8801833515057" target="_blank" rel="noopener"><span data-i18n="Message the developer on WhatsApp">Message the developer on WhatsApp</span> · 01833515057</a></p>
   </footer>
+
+  <a id="waFab" class="wa-fab wa-contact" href="https://wa.me/8801833515057" target="_blank" rel="noopener" aria-label="Message the developer on WhatsApp" title="Message the developer on WhatsApp">
+    <span class="wa-ico"></span>
+    <span class="wa-label" data-i18n="Chat with developer">Chat with developer</span>
+  </a>
 
   <div id="busy" class="fixed inset-0 z-50 hidden place-items-center bg-white/40 backdrop-blur-sm">
     <div class="glass rounded-3xl p-7 w-[min(90vw,360px)] text-center fade-in">
